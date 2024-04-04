@@ -1,4 +1,4 @@
--- {"id":1000121,"ver":"1.0.1","libVer":"1.0.0","author":"Demarcussee"}
+-- {"id":10121,"ver":"1.0.1","libVer":"1.0.0","author":"Demarcussee"}
 
 local baseURL = "https://binnovel.com"
 
@@ -234,7 +234,7 @@ local function getListing(name, inc, sortString)
 end
 
 return {
-    id = 1000121,
+    id = 10121,
     name = "Novelbin",
     baseURL = baseURL,
     imageURL = "https://i.imgur.com/KQOwfMt.png",
