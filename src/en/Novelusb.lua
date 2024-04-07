@@ -158,7 +158,7 @@ local function getPassage(chapterURL)
     local ht = "<h1>" .. title .. "</h1>"
     local pTagList = ""
     pTagList = map(htmlElement:select("p"), text)
-    for k,v in pairs(pTagList) do ht = ht .. "<br><br>" .. v end
+    for k,v in pairs(pTagList) do ht = ht .. "<p><p>" .. v end
     return pageOfElem(Document(ht), true)
 end
 
