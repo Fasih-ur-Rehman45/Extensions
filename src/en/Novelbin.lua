@@ -170,7 +170,7 @@ local function search(data)
     return map(doc:selectFirst(".list.list-novel"):select(".row"), function(v)
         return Novel {
             title = v:selectFirst(".novel-title"):text(),
-            imageURL = v:selectFirst(".cover"):attr("src"),
+            imageURL = v:selectFirst(".cover"):attr("data-src"),
             link = shrinkURL(v:selectFirst(".novel-title a"):attr("href"))
         }
     end)
@@ -187,7 +187,7 @@ local function parseNovel(novelURL)
     return NovelInfo {
         title = document:selectFirst(".title"):text(),
         description = document:selectFirst(".desc-text"):text(),
-        imageURL = document:selectFirst(".books .book img"):attr("data-src"),
+        imageURL = document:selectFirst(".books .book img"):attr("src"),
         status = ({
             Ongoing = NovelStatus.PUBLISHING,
             Completed = NovelStatus.COMPLETED,
