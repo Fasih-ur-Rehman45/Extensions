@@ -167,7 +167,7 @@ local function search(data)
     local queryContent = data[QUERY]
     local page = data[PAGE]
     local doc = GETDocument(baseURL .. "/search/?keyword=" .. queryContent .. "&page=" .. page)
-    return map(doc:selectFirst(".list.list-novel"):select(".row"), function(v)
+    return map(doc:selectFirst(".col-novel-main .list-novel"):select(".row"), function(v)
         return Novel {
             title = v:selectFirst(".novel-title"):text(),
             imageURL = v:selectFirst(".cover"):attr("data-src"),
@@ -187,7 +187,7 @@ local function parseNovel(novelURL)
     return NovelInfo {
         title = document:selectFirst(".title"):text(),
         description = document:selectFirst(".desc-text"):text(),
-        imageURL = document:selectFirst(".books .book img"):attr("src"),
+        imageURL = document:selectFirst(".books .book img"):attr("data-src"),
         status = ({
             Ongoing = NovelStatus.PUBLISHING,
             Completed = NovelStatus.COMPLETED,
