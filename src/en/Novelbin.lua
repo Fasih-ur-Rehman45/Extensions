@@ -170,7 +170,7 @@ local function search(data)
     return map(doc:selectFirst(".list.list-novel"):select(".row"), function(v)
         return Novel {
             title = v:selectFirst(".novel-title"):text(),
-            imageURL = v:selectFirst("img.cover"):attr("data-src"):gsub("_200_89", ""),
+            imageURL = v:selectFirst("img.cover.custom.lazy"):attr("src"):gsub("_200_89", ""),
             link = shrinkURL(v:selectFirst(".novel-title a"):attr("href"))
         }
     end)
