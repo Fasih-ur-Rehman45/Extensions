@@ -187,7 +187,7 @@ local function parseNovel(novelURL)
     return NovelInfo {
         title = document:selectFirst(".title"):text(),
         description = document:selectFirst(".desc-text"):text(),
-        imageURL = document:selectFirst(".books .book img.lazy"):attr("data-src"),
+        imageURL = document:selectFirst(".books .book img"):attr("data-src"),
         status = ({
             Ongoing = NovelStatus.PUBLISHING,
             Completed = NovelStatus.COMPLETED,
