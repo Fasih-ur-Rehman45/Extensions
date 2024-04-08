@@ -167,10 +167,10 @@ local function search(data)
     local queryContent = data[QUERY]
     local page = data[PAGE]
     local doc = GETDocument(baseURL .. "/search/?keyword=" .. queryContent .. "&page=" .. page)
-    return map(doc:selectFirst(".col-novel-main .list-novel"):select(".row"), function(v)
+    return map(doc:selectFirst(".col-novel-main.list-novel"):select(".row"), function(v)
         return Novel {
             title = v:selectFirst(".novel-title"):text(),
-            imageURL = v:selectFirst(".cover"):attr("data-src"),
+            imageURL = v:selectFirst(".cover"):attr("data-src"):gsub("_200_89", ""),
             link = shrinkURL(v:selectFirst(".novel-title a"):attr("href"))
         }
     end)
@@ -206,10 +206,10 @@ end
 
 local function parseListing(listingURL)
     local document = GETDocument(listingURL)
-    return map(document:selectFirst(".list.list-novel"):select(".row"), function(v)
+    return map(document:selectFirst(".col-novel-main.list-novel"):select(".row"), function(v)
         return Novel {
             title = v:selectFirst(".novel-title"):text(),
-            imageURL = v:selectFirst(".cover"):attr("data-src"),
+            imageURL = v:selectFirst(".cover"):attr("data-src"):gsub("_200_89", ""),
             link = shrinkURL(v:selectFirst(".novel-title a"):attr("href"))
         }
     end)
