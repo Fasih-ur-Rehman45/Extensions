@@ -170,7 +170,7 @@ local function search(data)
     return map(doc:selectFirst(".list.list-novel"):select(".row"), function(v)
         return Novel {
             title = v:selectFirst(".novel-title"):text(),
-            imageURL = v:selectFirst("img.cover"):attr("src"),
+            imageURL = v:selectFirst("img.cover"):attr("data-src"),
             link = shrinkURL(v:selectFirst(".novel-title a"):attr("href"))
         }
     end)
@@ -209,7 +209,7 @@ local function parseListing(listingURL)
     return map(document:selectFirst(".list.list-novel"):select(".row"), function(v)
         return Novel {
             title = v:selectFirst(".novel-title"):text(),
-            imageURL = v:selectFirst("img.cover"):attr("src"),
+            imageURL = v:selectFirst("img.cover"):attr("data-src"),
             link = shrinkURL(v:selectFirst(".novel-title a"):attr("href"))
         }
     end)
