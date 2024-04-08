@@ -206,7 +206,7 @@ end
 
 local function parseListing(listingURL)
     local document = GETDocument(listingURL)
-    return map(document:selectFirst('.col-novel-main.archive .list.list-novel'):select('.row'), function(v)
+    return map(document:selectFirst(".col-novel-main.archive .list.list-novel"):select(".row"), function(v)
         return Novel {
             title = v:selectFirst(".novel-title"):text(),
             imageURL = v:selectFirst("img.cover"):attr("data-src"):gsub("_200_89", ""),
