@@ -181,7 +181,7 @@ end
 local function parseNovel(novelURL)
     local url = baseURL .. "/" .. novelURL
     local document = GETDocument(url)
-    local chID = string.match(url, ".*novel.book/(.*)")
+    local chID = (string.match(url, ".*novel.book/(.*)") or ""):gsub("(.-)%-145%d%d%d%d%d$", "%1")
     local chapterURL = baseURL .. "/ajax/chapter-archive?novelId=" .. chID
     local chapterDoc = GETDocument(chapterURL)
     return NovelInfo {
