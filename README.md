@@ -1,4 +1,4 @@
-# Extensions - Universe
+# Extensions
 
 Community extensions for Shosetsu
 
