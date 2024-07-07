@@ -39,6 +39,16 @@
       "ver": "1.0.1",
       "libVer": "1.0.0",
       "md5": ""
+    },
+    {
+      "name": "Syosetsu",
+      "fileName": "Syosetsu",
+      "imageURL": "https://github.com/shosetsuorg/extensions/raw/dev/icons/Syosetsu.png",
+      "id": 3,
+      "lang": "ja",
+      "ver": "1.2.2",
+      "libVer": "1.0.0",
+      "md5": "d2edddc58222392b59ed34b73e25d6b2"
     }
   ]
 }
