@@ -26,7 +26,7 @@ local function expandURL(url)
 end
 
 return {
-	id = 3,
+	id = 5055,
 	name = "Syosetsu",
 	baseURL = baseURL,
 	imageURL = "https://github.com/shosetsuorg/extensions/raw/dev/icons/Syosetsu.png",
