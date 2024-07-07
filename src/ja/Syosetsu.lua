@@ -76,28 +76,25 @@ return {
 		end
 		-- Chapters
 		if loadChapters then
-            local chapters = {}
             local totalPages = getTotalPages(document)
 
             -- Loop through all pages to collect chapters
             for page = 1, totalPages do
                 local pageURL = novelURL .. "?p=" .. page
-                local pageDocument = GETDocument(passageURL .. pageURL)
+                
+				local pageDocument = GETDocument(passageURL .. pageURL)
                 
                 -- Parse chapters from the current page
-                map(pageDocument:select("dl.novel_sublist2"), function(v, i)
+				novelPage:setChapters(AsList(map(document:select("dl.novel_sublist2"), function(v, i)
                     local chap = NovelChapter()
                     chap:setTitle(v:selectFirst("a"):text())
                     chap:setLink(v:selectFirst("a"):attr("href"))
                     chap:setRelease(v:selectFirst("dt.long_update"):text())
-                    chap:setOrder(i)
-                    table.insert(chapters, chap)
-                end)
+					chap:setOrder(i) 
+					return(chap)
+                end)))
             end
-
-            novelPage:setChapters(AsList(chapters))
         end
-
         return novelPage
     end,
 	shrinkURL = shrinkURL,
