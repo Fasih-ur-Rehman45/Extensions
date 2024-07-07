@@ -91,7 +91,6 @@ return {
 					chap:setRelease(v:selectFirst("dt.long_update"):text())
 					chap:setOrder(i)
 					table.insert(chapters, chap)
-					return(chap)
 				end)
 			end
 			novelPage:setChapters(AsList(chapters))
