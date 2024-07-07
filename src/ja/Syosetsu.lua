@@ -85,9 +85,10 @@ return {
 				local pageDocument = GETDocument(passageURL .. pageURL)
                 
                 -- Parse chapters from the current page
-				novelPage:setChapters(AsList(map(document:select("dl.novel_sublist2"), function(v, i)
+				novelPage:setChapters(AsList(map(pageDocument:select("dl.novel_sublist2"), function(v, i)
                     local chap = NovelChapter()
                     chap:setTitle(v:selectFirst("a"):text())
+					print(v:selectFirst("a"):text())
                     chap:setLink(v:selectFirst("a"):attr("href"))
                     chap:setRelease(v:selectFirst("dt.long_update"):text())
 					chap:setOrder(i) 
