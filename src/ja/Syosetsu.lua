@@ -7,12 +7,12 @@ local passageURL = "https://ncode.syosetu.com"
 local encode = Require("url").encode
 
 local function getTotalPages(html)
-    local lastPageLink = html:select("a.novelview_pager-last"):attr("href")
-    if lastPageLink then
-        local totalPages = tonumber(lastPageLink:match("p=(%d+)"))
-        return totalPages or 1  -- Return at least 1 if parsing fails
-    end
-    return 1  -- Return 1 if no last page link found (assuming only one page)
+	local lastPageLink = html:select("a.novelview_pager-last"):attr("href")
+	if lastPageLink then
+		local totalPages = tonumber(lastPageLink:match("p=(%d+)"))
+		return totalPages or 1
+	end
+	return 1
 end
 
 ---@param url string
@@ -37,13 +37,13 @@ return {
 			end
 			return map(GETDocument(
 					baseURL .. "/search.php?&search_type=novel&order_former=search&order=new&notnizi=1&p=" .. data[PAGE])
-					:select("div.searchkekka_box"), function(v)
-				local novel = Novel()
-				local e = v:selectFirst("div.novel_h"):selectFirst("a.tl")
-				novel:setLink(shrinkURL(e:attr("href")))
-				novel:setTitle(e:text())
-				return novel
-			end)
+				:select("div.searchkekka_box"), function(v)
+					local novel = Novel()
+					local e = v:selectFirst("div.novel_h"):selectFirst("a.tl")
+					novel:setLink(shrinkURL(e:attr("href")))
+					novel:setTitle(e:text())
+					return novel
+				end)
 		end)
 	},
 
@@ -57,7 +57,7 @@ return {
 		end
 		return table.concat(map(e:select("p"), function(v)
 			return v:text()
-		end), "\n") :gsub("<br>", "\n\n")
+		end), "\n"):gsub("<br>", "\n\n")
 	end,
 
 	parseNovel = function(novelURL, loadChapters)
@@ -76,42 +76,41 @@ return {
 		end
 		-- Chapters
 		if loadChapters then
-            local chapters = {}
-            local totalPages = getTotalPages(document)
+			local chapters = {}
+			local totalPages = getTotalPages(document)
 
-            -- Loop through all pages to collect chapters
-            for page = 1, totalPages do
-                local pageURL = novelURL .. "?p=" .. page
-                
+			-- Loop through all pages to collect chapters
+			for page = 1, totalPages do
+				local pageURL = novelURL .. "?p=" .. page
 				local pageDocument = GETDocument(passageURL .. pageURL)
-                
-                -- Parse chapters from the current page
-                map(pageDocument:select("dl.novel_sublist2"), function(v, i)
-                    local chap = NovelChapter()
-                    chap:setTitle(v:selectFirst("a"):text())
-                    chap:setLink(v:selectFirst("a"):attr("href"))
-                    chap:setRelease(v:selectFirst("dt.long_update"):text())
-					chap:setOrder(#chapters + i) 
-                    table.insert(chapters, chap)
-                end)
-            end
-            novelPage:setChapters(AsList(chapters))
-        end
+				-- Parse chapters from the current page
+				map(pageDocument:select("dl.novel_sublist2"), function(v, i)
+					local chap = NovelChapter()
+					chap:setTitle(v:selectFirst("a"):text())
+					chap:setLink(v:selectFirst("a"):attr("href"))
+					chap:setRelease(v:selectFirst("dt.long_update"):text())
+					chap:setOrder(i)
+					table.insert(chapters, chap)
+					return(chap)
+				end)
+			end
+			novelPage:setChapters(AsList(chapters))
+		end
 
-        return novelPage
-    end,
+		return novelPage
+	end,
 	shrinkURL = shrinkURL,
 	expandURL = expandURL,
 	getTotalPages = getTotalPages,
 	search = function(data)
 		return map(GETDocument(baseURL .. "/search.php?&word=" .. encode(data[0]) .. "&p=" .. data[PAGE])
-				:select("div.searchkekka_box"),
-				function(v)
-					local novel = Novel()
-					local e = v:selectFirst("div.novel_h"):selectFirst("a.tl")
-					novel:setLink(shrinkURL(e:attr("href")))
-					novel:setTitle(e:text())
-					return novel
-				end)
+			:select("div.searchkekka_box"),
+			function(v)
+				local novel = Novel()
+				local e = v:selectFirst("div.novel_h"):selectFirst("a.tl")
+				novel:setLink(shrinkURL(e:attr("href")))
+				novel:setTitle(e:text())
+				return novel
+			end)
 	end,
 }
