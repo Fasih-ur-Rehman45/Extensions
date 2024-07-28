@@ -78,12 +78,9 @@ return {
 		if loadChapters then
 			local chapters = {}
 			local totalPages = getTotalPages(document)
-
-			-- Loop through all pages to collect chapters
 			for page = 1, totalPages do
 				local pageURL = novelURL .. "?p=" .. page
 				local pageDocument = GETDocument(passageURL .. pageURL)
-				-- Parse chapters from the current page
 				map(pageDocument:select("dl.novel_sublist2"), function(v)
 					local chap = NovelChapter()
 					chap:setTitle(v:selectFirst("a"):text())
@@ -93,9 +90,7 @@ return {
 				end)
 			end
 			novelPage:setChapters(AsList(chapters))
-			--print(novelPage:setChapters(AsList(chapters)))
 		end
-
 		return novelPage
 	end,
 	shrinkURL = shrinkURL,
