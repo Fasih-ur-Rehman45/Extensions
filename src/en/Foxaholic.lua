@@ -7,7 +7,7 @@ return Require("Madara")("https://www.foxaholic.com", {
 	hasCloudFlare = true,
 
 	-- defaults values
-	latestNovelSel = "div.col-12.col-md-3.badge-pos-2",
+	latestNovelSel = "div.col-6.col-md-3.badge-pos-2",
 
 	genres = {
 		"Action",
