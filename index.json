@@ -49,16 +49,6 @@
       "ver": "1.2.4",
       "libVer": "1.0.0",
       "md5": "d2edddc58222392b59ed34b73e25d6b2"
-    },
-    {
-      "name": "Foxaholic",
-      "fileName": "Foxaholic",
-      "imageURL": "https://github.com/shosetsuorg/extensions/raw/dev/icons/Foxaholic.png",
-      "id": 174,
-      "lang": "en",
-      "ver": "2.1.3",
-      "libVer": "1.0.0",
-      "md5": "c5977c9ba48c5115426fb3010cc65894"
     }
   ]
 }
