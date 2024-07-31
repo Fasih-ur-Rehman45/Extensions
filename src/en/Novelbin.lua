@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.0.1","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.0.2","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://binnovel.com"
 
@@ -146,6 +146,8 @@ local function getPassage(chapterURL)
     local htmlElement = GETDocument(chapterURL)
     local title = htmlElement:selectFirst(".chr-title"):attr("title")
     htmlElement = htmlElement:selectFirst("#chr-content")
+     htmlElement:select("div,h6,p[style='display: none;']"):remove()
+    local chapterText = htmlElement:html() or ""
     local toRemove = {}
     htmlElement:traverse(NodeVisitor(function(v)
         if v:tagName() == "p" then
@@ -161,9 +163,16 @@ local function getPassage(chapterURL)
         v:remove()
     end
     local ht = "<h1>" .. title .. "</h1>"
-    local pTagList = ""
-    pTagList = map(htmlElement:select("p"), text)
-    for k,v in pairs(pTagList) do ht = ht .. "<br><br>" .. v end
+    local pTagList = map(htmlElement:select("p"), text)
+    if #pTagList > 0 then
+        local htmlContent = ""
+        for _, v in pairs(pTagList) do
+            htmlContent = htmlContent .. "<br><br>" .. v
+        end
+        ht = ht .. htmlContent
+    else
+        ht = ht .. chapterText
+    end
     return pageOfElem(Document(ht), true)
 end
 
