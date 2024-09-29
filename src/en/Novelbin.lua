@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.0.2","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.0.3","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://binnovel.com"
 
@@ -17,7 +17,7 @@ end
 ---@param url string
 ---@param type int
 local function expandURL(url)
-    return baseURL .. "/" .. url
+    return url
 end
 
 local GENRE_FILTER = 2
@@ -146,7 +146,7 @@ local function getPassage(chapterURL)
     local htmlElement = GETDocument(chapterURL)
     local title = htmlElement:selectFirst(".chr-title"):attr("title")
     htmlElement = htmlElement:selectFirst("#chr-content")
-     htmlElement:select("div,h6,p[style='display: none;']"):remove()
+    htmlElement:select("div,h6,p[style='display: none;']"):remove()
     local chapterText = htmlElement:html() or ""
     local toRemove = {}
     htmlElement:traverse(NodeVisitor(function(v)
@@ -193,9 +193,9 @@ end
 --- @param novelURL string @URL of novel
 --- @return NovelInfo
 local function parseNovel(novelURL)
-    local url = baseURL .. "/" .. novelURL
+    local url = novelURL
     local document = GETDocument(url)
-    local chID = (string.match(url, ".*novel.book/(.*)"))
+    local chID = (string.match(url, ".*b/(.*)"))
     local chapterURL = baseURL .. "/ajax/chapter-archive?novelId=" .. chID
     local chapterDoc = GETDocument(chapterURL)
     return NovelInfo {
