@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.0.4","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.0.5","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 
@@ -197,6 +197,7 @@ local function parseNovel(novelURL)
     local url = baseURL .. "/" .. novelURL
     local document = GETDocument(url)
     local chID = (string.match(url, ".*b/(.*)"))
+    --TODO:Find A better way to get the chapter list
     local tempUrl = "https://binnovel.com"
     local chapterURL = tempUrl .. "/ajax/chapter-archive?novelId=" .. chID
     local chapterDoc = GETDocument(chapterURL)
@@ -208,6 +209,8 @@ local function parseNovel(novelURL)
             Ongoing = NovelStatus.PUBLISHING,
             Completed = NovelStatus.COMPLETED,
         })[document:selectFirst(".info .text-primary"):text()],
+        authors = { document:selectFirst(".info > li:nth-child(1)"):text()},
+        genres = map(document:select(".info > li:nth-child(2) a"), text ),
         chapters = AsList(
                 map(chapterDoc:select(".list-chapter li a"), function(v)
                     return NovelChapter {
