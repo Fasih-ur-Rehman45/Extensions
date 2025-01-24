@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.0.5","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.0.6","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 
@@ -209,8 +209,22 @@ local function parseNovel(novelURL)
             Ongoing = NovelStatus.PUBLISHING,
             Completed = NovelStatus.COMPLETED,
         })[document:selectFirst(".info .text-primary"):text()],
-        authors = { document:selectFirst(".info > li:nth-child(1)"):text()},
-        genres = map(document:select(".info > li:nth-child(2) a"), text ),
+        authors = (function()
+            local firstLi = document:selectFirst(".info > li:nth-child(1)")
+            if firstLi and firstLi:selectFirst("h3"):text() == "Alternative names:" then
+                return { document:selectFirst(".info > li:nth-child(2)"):text() }
+            else
+                return { document:selectFirst(".info > li:nth-child(1)"):text() }
+            end
+        end)(),
+        genres = (function()
+            local firstLi = document:selectFirst(".info > li:nth-child(1)")
+            if firstLi and firstLi:selectFirst("h3"):text() == "Alternative names:" then
+                return map(document:select(".info > li:nth-child(3) a"), text)
+            else
+                return map(document:select(".info > li:nth-child(2) a"), text)
+            end
+        end)(),
         chapters = AsList(
                 map(chapterDoc:select(".list-chapter li a"), function(v)
                     return NovelChapter {
