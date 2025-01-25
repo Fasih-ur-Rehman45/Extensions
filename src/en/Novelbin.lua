@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.0.7","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.0.8","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 
@@ -201,6 +201,11 @@ local function parseNovel(novelURL)
     local tempUrl = "https://binnovel.com"
     local chapterURL = tempUrl .. "/ajax/chapter-archive?novelId=" .. chID
     local chapterDoc = GETDocument(chapterURL)
+    local first_li_element = document:selectFirst('.info > li')
+    if first_li_element and string.find(first_li_element:text(), "Alternative names") then
+        first_li_element:remove()
+    end
+
     return NovelInfo {
         title = document:selectFirst(".title"):text(),
         description = document:selectFirst(".desc-text"):text(),
@@ -209,35 +214,26 @@ local function parseNovel(novelURL)
             Ongoing = NovelStatus.PUBLISHING,
             Completed = NovelStatus.COMPLETED,
         })[document:selectFirst(".info .text-primary"):text()],
-        authors = (function()
-            local firstLi = document:selectFirst(".info > li:nth-child(1)")
-            if firstLi and firstLi:selectFirst("h3"):text() == "Alternative names:" then
-                return { document:selectFirst(".info > li:nth-child(2)"):text() }
-            else
-                return { document:selectFirst(".info > li:nth-child(1)"):text() }
-            end
-        end)(),
-        genres = (function()
-            local firstLi = document:selectFirst(".info > li:nth-child(1)")
-            if firstLi and firstLi:selectFirst("h3"):text() == "Alternative names:" then
-                return map(document:select(".info > li:nth-child(3) a"), text)
-            else
-                return map(document:select(".info > li:nth-child(2) a"), text)
-            end
-        end)(),
+        authors = { document:selectFirst(".info > li:nth-child(1)"):text() },
+        genres = map(document:select(".info > li:nth-child(2) a"), text),
         chapters = AsList(
-            map(chapterDoc:select(".list-chapter li a"), function(v)
-                local titleElement = v:selectFirst(".nchr-text.chapter-title")
-                if titleElement then
-                    local premiumLabel = titleElement:selectFirst(".premium-label")
-                    if not premiumLabel then
-                        return NovelChapter {
-                            order = v,
-                            title = v:attr("title"),
-                            link = v:attr("href")
-                        }
+            filter(
+                map(chapterDoc:select(".list-chapter li a"), function(v)
+                    local titleElement = v:selectFirst(".nchr-text.chapter-title")
+                    if titleElement then
+                        local premiumLabel = titleElement:selectFirst(".premium-label")
+                        if not premiumLabel then
+                            return NovelChapter {
+                                order = v,
+                                title = v:attr("title"),
+                                link = v:attr("href")
+                            }
+                        end
                     end
-                end
+                    return nil
+                end),
+                function(chapter)
+                    return chapter ~= nil
             end)
         )
     }
