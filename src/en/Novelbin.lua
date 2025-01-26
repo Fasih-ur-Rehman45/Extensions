@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.0.8","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.0.9","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 
@@ -165,7 +165,7 @@ local function getPassage(chapterURL)
     end
     local ht = "<h1>" .. title .. "</h1>"
     local pTagList = map(htmlElement:select("p"), text)
-    if #pTagList > 0 then
+    if #pTagList > 1 then
         local htmlContent = ""
         for _, v in pairs(pTagList) do
             htmlContent = htmlContent .. "<br><br>" .. v
