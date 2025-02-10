@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.0.1","libVer":"1.0.0","author":""}
+-- {"id":10255,"ver":"1.0.2","libVer":"1.0.0","author":""}
 
 local json = Require("dkjson")
 
@@ -12,7 +12,7 @@ local name = "WTR-LAB"
 local baseURL = "https://wtr-lab.com/"
 
 --- URL of the logo.
-local imageURL = "https://i.imgur.com/ObQtFVW.png"  -- Update correct path
+local imageURL = "https://i.imgur.com/ObQtFVW.png"
 
 --- Cloudflare protection status.
 local hasCloudFlare = false
@@ -99,7 +99,7 @@ local function parseNovel(novelURL)
         imageURL = doc:selectFirst(".img-wrap img"):attr("src"),
         description = doc:selectFirst(".lead"):text(),
         authors = {doc:select("td:matches(^Author$) + td a"):text()},
-        genres = {doc:select("td:matches(^Genre$) + td a"):text()},
+        genres = {doc:select("td:matches(^Genre$) + td a"):text():gsub(",%s*", " ")},
         status = ({
             Ongoing = NovelStatus.PUBLISHING,
             Completed = NovelStatus.COMPLETED,
