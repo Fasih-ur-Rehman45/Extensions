@@ -1,12 +1,10 @@
--- {"id":10255,"ver":"1.0.3","libVer":"1.0.0","author":""}
+-- {"id":10255,"ver":"1.0.4","libVer":"1.0.0","author":""}
 
 local json = Require("dkjson")
 
 --- Identification number of the extension.
 local id = 10255  -- Update with your extension ID
 
---- Name of extension to display to the user.
-local name = "WTR-LAB"
 
 --- Base URL of the extension.
 local baseURL = "https://wtr-lab.com/"
@@ -16,6 +14,11 @@ local imageURL = "https://i.imgur.com/ObQtFVW.png"
 
 --- Cloudflare protection status.
 local hasCloudFlare = false
+
+---@param v Element
+local text = function(v)
+    return v:text()
+end
 
 --- Search configuration.
 local hasSearch = true
@@ -109,7 +112,8 @@ local function parseNovel(novelURL)
     for i, ch in ipairs(serie.chapters) do
         chapters[#chapters+1] = NovelChapter {
             title = ch.title,
-            --find a better way to control services
+            --find a better way to control service
+            --for now, it's hardcoded to google
             link = "serie-" .. serie.serie_data.raw_id .. "/" .. serie.serie_data.slug .. "/chapter-" .. ch.order .. "?service=google",
             order = i
         }
@@ -182,7 +186,7 @@ local listings = {
 }
 return {
     id = id,
-    name = name,
+    name = "WTR-LAB",
     baseURL = baseURL,
     imageURL = imageURL,
     listings = listings,
