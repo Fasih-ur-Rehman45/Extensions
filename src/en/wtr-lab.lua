@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.0.0","libVer":"1.0.0","author":""}
+-- {"id":10255,"ver":"1.0.1","libVer":"1.0.0","author":""}
 
 local json = Require("dkjson")
 
@@ -99,6 +99,7 @@ local function parseNovel(novelURL)
         imageURL = doc:selectFirst(".img-wrap img"):attr("src"),
         description = doc:selectFirst(".lead"):text(),
         authors = {doc:select("td:matches(^Author$) + td a"):text()},
+        genres = {doc:select("td:matches(^Genre$) + td a"):text()},
         status = ({
             Ongoing = NovelStatus.PUBLISHING,
             Completed = NovelStatus.COMPLETED,
@@ -109,6 +110,7 @@ local function parseNovel(novelURL)
     for i, ch in ipairs(serie.chapters) do
         chapters[#chapters+1] = NovelChapter {
             title = ch.title,
+            --find a better way to control services
             link = "serie-" .. serie.serie_data.raw_id .. "/" .. serie.serie_data.slug .. "/chapter-" .. ch.order .. "?service=google",
             order = i
         }
