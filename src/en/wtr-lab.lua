@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.0.4","libVer":"1.0.0","author":""}
+-- {"id":10255,"ver":"1.0.5","libVer":"1.0.0","author":""}
 
 local json = Require("dkjson")
 
@@ -86,7 +86,24 @@ local function getPassage(chapterURL)
     local data = json.decode(script)
     local content = data.props.pageProps.serie.chapter_data.data.body
     local html = table.concat(map(content, function(v) return "<p>" .. v .. "</p>" end))
-    return html
+    local doc = Document(html)
+    -- Traverse the document to remove empty <p> tags
+    local toRemove = {}
+    doc:traverse(NodeVisitor(function(v)
+        if v:tagName() == "p" and v:text() == "" then
+            toRemove[#toRemove + 1] = v
+        end
+    end, nil, true))
+    -- Remove the empty <p> tags
+    for _, v in ipairs(toRemove) do
+        v:remove()
+    end
+    local pTagList = map(doc:select("p"), text)
+    local htmlContent = ""
+    for _, v in pairs(pTagList) do
+        htmlContent = htmlContent .. "<br><br>" .. v
+    end
+    return pageOfElem(Document(htmlContent), true)
 end
 
 --- Novel parsing function.
