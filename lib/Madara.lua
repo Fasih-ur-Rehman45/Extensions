@@ -1,4 +1,4 @@
--- {"ver":"2.9.0","author":"TechnoJo4","dep":["url"]}
+-- {"ver":"2.9.1","author":"TechnoJo4","dep":["url"]}
 
 local encode = Require("url").encode
 local text = function(v)
@@ -31,6 +31,7 @@ local defaults = {
 	ajaxFormDataAttr = "data-post",
 	ajaxFormDataUrl = "/wp-admin/admin-ajax.php",
 	ajaxSeriesUrl = "ajax/chapters/",
+	isSearchIncrementing = true,
 
 	--- Some sites require custom CSS to exist, such as RTL support
 	customStyle = "",
@@ -339,7 +340,6 @@ return function(baseURL, _self)
 		end)) -- 6
 	}
 
-	_self["isSearchIncrementing"] = true
 	if _self.searchHasOper then
 		keyID = keyID + 1
 		_self.searchOperId = keyID
