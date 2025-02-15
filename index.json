@@ -1,64 +1,120 @@
 {
+  "authors": [
+    {
+      "id": -821183208,
+      "name": "TechnoJo4",
+      "desc": "Worked on 247truyen, CommonCSS, Madara, NovelFull, WWVolare, url",
+      "imageURL": "",
+      "website": ""
+    },
+    {
+      "id": -2017179821,
+      "name": "Doomsdayrs",
+      "desc": "Worked on NovelFull, Syosetsu",
+      "imageURL": "",
+      "website": ""
+    },
+    {
+      "id": 0,
+      "name": "",
+      "desc": "Worked on WTR-LAB",
+      "imageURL": "",
+      "website": ""
+    },
+    {
+      "id": -980691669,
+      "name": "Confident-hate",
+      "desc": "Worked on Novelbin",
+      "imageURL": "",
+      "website": ""
+    },
+    {
+      "id": 1379167306,
+      "name": "David Kolf",
+      "desc": "Worked on dkjson",
+      "imageURL": "",
+      "website": ""
+    }
+  ],
   "libraries": [
     {
       "name": "247truyen",
-      "ver": "1.1.2"
+      "ver": "1.1.2",
+      "url": null,
+      "hash": "ea7911e7a604f8cf17d7c42d637b1927abbcea6f19ea5f8647f945997a32a0ea"
     },
     {
       "name": "CommonCSS",
-      "ver": "1.0.1"
-    },
-    {
-      "name": "dkjson",
-      "ver": "1.0.1"
-    },
-    {
-      "name": "NovelFull",
-      "ver": "2.0.6"
-    },
-    {
-      "name": "url",
-      "ver": "1.0.0"
-    },
-    {
-      "name": "WWVolare",
-      "ver": "1.2.2"
+      "ver": "1.0.1",
+      "url": null,
+      "hash": "c59ab814c998479704044aaf30e57e30f76408d04c03339e178d8f6e2f9d04d1"
     },
     {
       "name": "Madara",
-      "ver": "2.9.0"
+      "ver": "2.9.0",
+      "url": null,
+      "hash": "b05e3c51574d0a92a7083558d6ebdaf8914d0e86f5de5d4eb4d32b3c6d02f6ad"
+    },
+    {
+      "name": "NovelFull",
+      "ver": "2.0.6",
+      "url": null,
+      "hash": "f83e0753b8bd91638f30e7d2ba87bf6a69f251b21f829df8872ae87a67890e1c"
+    },
+    {
+      "name": "WWVolare",
+      "ver": "1.2.2",
+      "url": null,
+      "hash": "93a96bd193d9d793dfc146add17defb649f4dfc51f69142c7f69a0f42adca55c"
+    },
+    {
+      "name": "dkjson",
+      "ver": "1.0.1",
+      "url": null,
+      "hash": "849de1a2145ac1b7588b365796be8939f611a8be8be458144ee49301ff0ca1f2"
+    },
+    {
+      "name": "url",
+      "ver": "1.0.0",
+      "url": null,
+      "hash": "69744a5b68391ee71f05ac927d0487318e1887a2bf5cd434c51b2c68573a0d07"
     }
   ],
   "scripts": [
     {
-      "name": "Novelbin",
-      "fileName": "Novelbin",
-      "imageURL": "https://i.imgur.com/KQOwfMt.png",
-      "id": 10121,
-      "lang": "en",
-      "ver": "1.1.0",
-      "libVer": "1.0.0",
-      "md5": ""
-    },
-    {
-      "name": "WTR-LAB",
-      "fileName": "wtr-lab",
-      "imageURL": "https://i.imgur.com/ObQtFVW.png",
-      "id": 10255,
-      "lang": "en",
-      "ver": "1.0.6",
-      "libVer": "1.0.0",
-      "md5": ""
-    },
-    {
+      "id": 5055,
       "name": "Syosetsu",
       "fileName": "Syosetsu",
       "imageURL": "https://github.com/shosetsuorg/extensions/raw/dev/icons/Syosetsu.png",
-      "id": 5055,
       "lang": "ja",
       "ver": "1.2.4",
       "libVer": "1.0.0",
-      "md5": "d2edddc58222392b59ed34b73e25d6b2"
+      "md5": "0aa4097c777f8c8d279429d938cd5bf025f877a96759e8c5547f360d1b56e105",
+      "type": "LuaScript"
+    },
+    {
+      "id": 10121,
+      "name": "Novelbin",
+      "fileName": "Novelbin",
+      "imageURL": "https://i.imgur.com/KQOwfMt.png",
+      "lang": "en",
+      "ver": "1.1.0",
+      "libVer": "1.0.0",
+      "md5": "346502c786ea7a76be0797a14f22aa7c92400b327fa63b4d50dae894ca17a7ad",
+      "type": "LuaScript"
+    },
+    {
+      "id": 10255,
+      "name": "WTR-LAB",
+      "fileName": "wtr-lab",
+      "imageURL": "https://i.imgur.com/ObQtFVW.png",
+      "lang": "en",
+      "ver": "1.0.6",
+      "libVer": "1.0.0",
+      "md5": "d885447ccb3b2d7d6e19cab8b61762fd173bdd55464c5baa3e84645f8c5b7c52",
+      "type": "LuaScript"
     }
-  ]
+  ],
+  "styles": [],
+  "js": []
 }
