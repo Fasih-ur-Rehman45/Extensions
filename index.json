@@ -34,6 +34,20 @@
       "desc": "Worked on dkjson",
       "imageURL": "",
       "website": ""
+    },
+    {
+      "id": -931466336,
+      "name": "JFronny",
+      "desc": "Worked on XenForo",
+      "imageURL": "",
+      "website": ""
+    },
+    {
+      "id": -228911304,
+      "name": "Stepets",
+      "desc": "Worked on utf8",
+      "imageURL": "",
+      "website": ""
     }
   ],
   "libraries": [
@@ -68,6 +82,12 @@
       "hash": "93a96bd193d9d793dfc146add17defb649f4dfc51f69142c7f69a0f42adca55c"
     },
     {
+      "name": "XenForo",
+      "ver": "1.0.5",
+      "url": null,
+      "hash": "99e92b56c773f2c567384bbb60962b612634915f328577953193cc70cc6e31c1"
+    },
+    {
       "name": "dkjson",
       "ver": "1.0.1",
       "url": null,
@@ -78,6 +98,12 @@
       "ver": "1.0.0",
       "url": null,
       "hash": "69744a5b68391ee71f05ac927d0487318e1887a2bf5cd434c51b2c68573a0d07"
+    },
+    {
+      "name": "utf8",
+      "ver": "1.0.0",
+      "url": null,
+      "hash": "385ac1f729ae11ec9ea60089d275e6d937857a0ee2a09291c5ce187e86966180"
     }
   ],
   "scripts": [
