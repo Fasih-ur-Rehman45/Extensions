@@ -55,31 +55,31 @@
       "name": "247truyen",
       "ver": "1.1.2",
       "url": null,
-      "hash": "ea7911e7a604f8cf17d7c42d637b1927abbcea6f19ea5f8647f945997a32a0ea"
+      "hash": "5497988eb28d103e8f992981e3c6ee369d6d1a8171d3719c0361d8130fd9b860"
     },
     {
       "name": "CommonCSS",
       "ver": "1.0.1",
       "url": null,
-      "hash": "c59ab814c998479704044aaf30e57e30f76408d04c03339e178d8f6e2f9d04d1"
+      "hash": "eb398cff152cf1ff1a7ca7ad415f55bf55aca0acefafb5363982e083de18a67d"
     },
     {
       "name": "Madara",
       "ver": "2.9.1",
       "url": null,
-      "hash": "5534dc8e1d308268593b64d1ad61fb430be6fded7a7422e3b73610918d15c7b4"
+      "hash": "ed160e1ab15729bd19f26fdff7acbcac27d2d7be7727441f059ff893db549357"
     },
     {
       "name": "NovelFull",
       "ver": "2.0.6",
       "url": null,
-      "hash": "f83e0753b8bd91638f30e7d2ba87bf6a69f251b21f829df8872ae87a67890e1c"
+      "hash": "3f92488c9285e84bf5416fcf4539a008e6b2ca123711a408be2bd39fe69e05ab"
     },
     {
       "name": "WWVolare",
       "ver": "1.2.2",
       "url": null,
-      "hash": "93a96bd193d9d793dfc146add17defb649f4dfc51f69142c7f69a0f42adca55c"
+      "hash": "ae65d57adca4d64e2e1b713db84524e70b47b941d7cc58701aa8c665303bc024"
     },
     {
       "name": "XenForo",
@@ -91,13 +91,13 @@
       "name": "dkjson",
       "ver": "1.0.1",
       "url": null,
-      "hash": "849de1a2145ac1b7588b365796be8939f611a8be8be458144ee49301ff0ca1f2"
+      "hash": "97803cfe54b21695dda1e8f8a37c5933c4dc7691e5df17c2c1df6cef1203c259"
     },
     {
       "name": "url",
       "ver": "1.0.0",
       "url": null,
-      "hash": "69744a5b68391ee71f05ac927d0487318e1887a2bf5cd434c51b2c68573a0d07"
+      "hash": "f34c81389a1f13b2f6c9caac7b3c098708cab8b4de27f8081812a65ead7bc51a"
     },
     {
       "name": "utf8",
@@ -115,7 +115,7 @@
       "lang": "ja",
       "ver": "1.2.4",
       "libVer": "1.0.0",
-      "md5": "0aa4097c777f8c8d279429d938cd5bf025f877a96759e8c5547f360d1b56e105",
+      "md5": "ac4d0d676166d0dba7dfbcbdd1a9b3a14f095fd9092cfbc934bf7e7986099652",
       "type": "LuaScript"
     },
     {
@@ -126,7 +126,7 @@
       "lang": "en",
       "ver": "1.1.0",
       "libVer": "1.0.0",
-      "md5": "346502c786ea7a76be0797a14f22aa7c92400b327fa63b4d50dae894ca17a7ad",
+      "md5": "0198a8321bd321ce55a19e2ee1306c1cc1d780d97d5e71d5e5b91a6ae40f5565",
       "type": "LuaScript"
     },
     {
@@ -137,7 +137,7 @@
       "lang": "en",
       "ver": "1.0.7",
       "libVer": "1.0.0",
-      "md5": "f96262a6e7b263b5d43720ab9b4cbdc7f5ca3c8cc981274f38ae500dddc02c39",
+      "md5": "06726775e510e60a8d4cb29dd05c7c6fa8f02cfe0a758240cf46f6bedad8ef84",
       "type": "LuaScript"
     }
   ],
