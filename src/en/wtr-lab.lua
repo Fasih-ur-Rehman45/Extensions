@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.0.7","libVer":"1.0.0","author":""}
+-- {"id":10255,"ver":"1.0.8","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -110,17 +110,18 @@ end
 local function parseNovel(novelURL)
     local url = expandURL(novelURL, KEY_NOVEL_URL)
     local doc = GETDocument(url)
+    local alertElement = doc:selectFirst("div.alert.alert-warning")
+    local isReleased = true -- Assume the source is released by default
+    if alertElement and alertElement:text():find("This source is not released yet.") then
+        isReleased = false -- Mark the source as unreleased if the alert is found
+    end
     local script = doc:selectFirst("#__NEXT_DATA__"):html()
     local data = json.decode(script)
     local serie = data.props.pageProps.serie
-    local endNum = serie.serie_data.chapter_count
-    local chaplist = baseURL .. 'api/chapters' .. "/" .. serie.serie_data.raw_id.."?start=1&end=" .. endNum
-    local chapdoc = GETDocument(chaplist)
-    local chapterData = json.decode(chapdoc:selectFirst("body"):text())
 
     local novelInfo = NovelInfo {
         title = doc:selectFirst("h1.text-uppercase"):text(),
-        imageURL = doc:selectFirst(".img-wrap img"):attr("src"),
+        imageURL = doc:selectFirst("div.image-wrap img"):attr("src"),
         description = doc:selectFirst(".description"):text(),
         authors = {doc:select("td:matches(^Author$) + td a"):text()},
         status = ({
@@ -128,18 +129,25 @@ local function parseNovel(novelURL)
             Completed = NovelStatus.COMPLETED,
         })[doc:selectFirst("td:matches(^Status$) + td"):text()],
     }
+    if isReleased then
+        local endNum = serie.serie_data.chapter_count
+        local chaplist = baseURL .. 'api/chapters' .. "/" .. serie.serie_data.raw_id.."?start=1&end=" .. endNum
+        local chapdoc = GETDocument(chaplist)
+        local chapterData = json.decode(chapdoc:selectFirst("body"):text())
 
-    local chapters = {}
-    for i, ch in ipairs(chapterData.chapters) do
-        chapters[#chapters+1] = NovelChapter {
-            title = ch.title,
-            --find a better way to control service
-            --for now, it's hardcoded to google
-            link = "serie-" .. serie.serie_data.raw_id .. "/" .. serie.serie_data.slug .. "/chapter-" .. ch.order .. "?service=google",
-            order = i
-        }
+        local chapters = {}
+        for i, ch in ipairs(chapterData.chapters) do
+            chapters[#chapters+1] = NovelChapter {
+                title = ch.title,
+                link = "serie-" .. serie.serie_data.raw_id .. "/" .. serie.serie_data.slug .. "/chapter-" .. ch.order .. "?service=google",
+                order = i
+            }
+        end
+        novelInfo:setChapters(chapters)
+    else
+        -- If the source is not released, set an empty chapter list
+        novelInfo:setChapters({})
     end
-    novelInfo:setChapters(chapters)
     return novelInfo
 end
 --- Search function.

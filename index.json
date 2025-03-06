@@ -15,13 +15,6 @@
       "website": ""
     },
     {
-      "id": 0,
-      "name": "",
-      "desc": "Worked on WTR-LAB",
-      "imageURL": "",
-      "website": ""
-    },
-    {
       "id": -980691669,
       "name": "Confident-hate",
       "desc": "Worked on Novelbin",
@@ -46,6 +39,13 @@
       "id": -228911304,
       "name": "Stepets",
       "desc": "Worked on utf8",
+      "imageURL": "",
+      "website": ""
+    },
+    {
+      "id": -1612337247,
+      "name": "Zordic",
+      "desc": "Worked on WTR-LAB",
       "imageURL": "",
       "website": ""
     }
@@ -124,9 +124,9 @@
       "fileName": "Novelbin",
       "imageURL": "https://i.imgur.com/KQOwfMt.png",
       "lang": "en",
-      "ver": "1.1.0",
+      "ver": "1.1.1",
       "libVer": "1.0.0",
-      "md5": "0198a8321bd321ce55a19e2ee1306c1cc1d780d97d5e71d5e5b91a6ae40f5565",
+      "md5": "d3a2024638b941da156231c14ee0aabdb7415b16defc904f24ae7d139b274291",
       "type": "LuaScript"
     },
     {
@@ -135,9 +135,9 @@
       "fileName": "wtr-lab",
       "imageURL": "https://i.imgur.com/ObQtFVW.png",
       "lang": "en",
-      "ver": "1.0.7",
+      "ver": "1.0.8",
       "libVer": "1.0.0",
-      "md5": "06726775e510e60a8d4cb29dd05c7c6fa8f02cfe0a758240cf46f6bedad8ef84",
+      "md5": "9578a86e86bdd5831efc147fb59e2a09b21c8e4f00b1883a74212520969d0647",
       "type": "LuaScript"
     }
   ],

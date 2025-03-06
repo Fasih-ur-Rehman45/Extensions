@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.1.0","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.1.1","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 
@@ -190,7 +190,7 @@ local function search(data)
     return map(doc:selectFirst(".list.list-novel"):select(".row"), function(v)
         return Novel {
             title = v:selectFirst(".novel-title"):text(),
-            imageURL = v:selectFirst("img.cover"):attr("data-src"):gsub("_200_89", ""),
+            imageURL = v:selectFirst("img.cover"):attr("src"):gsub("_200_89", ""),
             link = shrinkURL(v:selectFirst(".novel-title a"):attr("href"))
         }
     end)
