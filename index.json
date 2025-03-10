@@ -124,9 +124,9 @@
       "fileName": "Novelbin",
       "imageURL": "https://i.imgur.com/KQOwfMt.png",
       "lang": "en",
-      "ver": "1.1.1",
+      "ver": "1.1.2",
       "libVer": "1.0.0",
-      "md5": "d3a2024638b941da156231c14ee0aabdb7415b16defc904f24ae7d139b274291",
+      "md5": "e3f4c601fd464419ff6c76a3c729a083f0d43cd121ed2d90822e8cdffcb0c0e0",
       "type": "LuaScript"
     },
     {
