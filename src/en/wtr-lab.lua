@@ -80,7 +80,7 @@ end
 
 --- Chapter content extraction.
 local function getPassage(chapterURL)
-    local url = expandURL(chapterURL, KEY_CHAPTER_URL)
+    local url = expandURL(chapterURL)
     local doc = GETDocument(url)
     local script = doc:selectFirst("script#__NEXT_DATA__"):html()
     local data = json.decode(script)
@@ -134,12 +134,12 @@ local function parseNovel(novelURL)
         local chaplist = baseURL .. 'api/chapters' .. "/" .. serie.serie_data.raw_id.."?start=1&end=" .. endNum
         local chapdoc = GETDocument(chaplist)
         local chapterData = json.decode(chapdoc:selectFirst("body"):text())
-
         local chapters = {}
         for i, ch in ipairs(chapterData.chapters) do
             chapters[#chapters+1] = NovelChapter {
                 title = ch.title,
-                link = "serie-" .. serie.serie_data.raw_id .. "/" .. serie.serie_data.slug .. "/chapter-" .. ch.order .. "?service=google",
+                -- To test you can use this link:"serie-" .. serie.serie_data.raw_id .. "/" .. serie.serie_data.slug .. "/chapter-" .. ch.order .."?service=google"
+                link = "serie-" .. serie.serie_data.raw_id .. "/" .. serie.serie_data.slug .. "/chapter-" .. ch.order,
                 order = i
             }
         end
