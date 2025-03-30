@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.0.8","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.0.9","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
