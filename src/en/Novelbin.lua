@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.1.2","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.1.3","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 
@@ -203,7 +203,7 @@ local function parseNovel(novelURL)
     local document = GETDocument(url)
     local chID = (string.match(url, ".*b/(.*)"))
     --TODO:Find A better way to get the chapter list
-    local tempUrl = "https://binnovel.com"
+    local tempUrl = "https://novelbin.com"
     local chapterURL = tempUrl .. "/ajax/chapter-archive?novelId=" .. chID
     local chapterDoc = GETDocument(chapterURL)
     local first_li_element = document:selectFirst('.info > li')
