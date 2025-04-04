@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.1.3","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.1.4","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 
@@ -201,10 +201,9 @@ end
 local function parseNovel(novelURL)
     local url = baseURL .. "/" .. novelURL
     local document = GETDocument(url)
-    local chID = (string.match(url, ".*b/(.*)"))
+    local chID = string.match(url, ".*/([^/]+)$")
     --TODO:Find A better way to get the chapter list
-    local tempUrl = "https://novelbin.com"
-    local chapterURL = tempUrl .. "/ajax/chapter-archive?novelId=" .. chID
+    local chapterURL = "https://novelbin.com/ajax/chapter-archive?novelId=" .. chID
     local chapterDoc = GETDocument(chapterURL)
     local first_li_element = document:selectFirst('.info > li')
     if first_li_element and string.find(first_li_element:text(), "Alternative names") then
@@ -222,27 +221,15 @@ local function parseNovel(novelURL)
         authors = { document:selectFirst(".info > li:nth-child(1)"):text() },
         genres = map(document:select(".info > li:nth-child(2) a"), text),
         chapters = AsList(
-            filter(
-                map(chapterDoc:select(".list-chapter li a"), function(v)
-                    local titleElement = v:selectFirst(".nchr-text.chapter-title")
-                    if titleElement then
-                        local premiumLabel = titleElement:selectFirst(".premium-label")
-                        local paidLabel = titleElement:selectFirst(".paid-label")
-                        if not premiumLabel and not paidLabel then
-                            return NovelChapter {
-                                order = v,
-                                title = v:attr("title"),
-                                link = v:attr("href")
-                            }
-                        end
-                    end
-                    return nil
-                end),
-                function(chapter)
-                    return chapter ~= nil
+            map(chapterDoc:select(".list-chapter li a"), function(v)
+                return NovelChapter {
+                    order = v,
+                    title = v:attr("title"),
+                    link = v:attr("href")
+                }
             end)
-        )
-    }
+    )
+}
 end
 
 local function parseListing(listingURL)
