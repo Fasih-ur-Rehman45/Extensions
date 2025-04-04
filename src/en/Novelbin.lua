@@ -1,6 +1,7 @@
--- {"id":10121,"ver":"1.1.6","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.1.7","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
+local subsite = "https://novelbin.lanovels.net"
 
 ---@param v Element
 local text = function(v)
@@ -143,6 +144,7 @@ local searchFilters = {
 --- @param chapterURL string @url of the chapter
 --- @return string @of chapter
 local function getPassage(chapterURL)
+    --chapterURL = baseURL .. chapterURL
     local htmlElement = GETDocument(chapterURL)
     local title = htmlElement:selectFirst(".chr-title"):attr("title")
     htmlElement = htmlElement:selectFirst("#chr-content")
@@ -202,7 +204,7 @@ local function parseNovel(novelURL)
     local document = GETDocument(url)
     local chID = document:selectFirst("#rating"):attr("data-novel-id")
     --TODO:Find A better way to get the chapter list
-    local chapterURL = "https://novelbin.com/ajax/chapter-archive?novelId=" .. chID
+    local chapterURL = baseURL.. "/ajax/chapter-archive?novelId=" .. chID
     local chapterDoc = GETDocument(chapterURL)
     local first_li_element = document:selectFirst('.info > li')
     if first_li_element and string.find(first_li_element:text(), "Alternative names") then
@@ -221,10 +223,14 @@ local function parseNovel(novelURL)
         genres = map(document:select(".info > li:nth-child(2) a"), text),
         chapters = AsList(
             map(chapterDoc:select(".list-chapter li a"), function(v)
+                --local fullUrl = v:attr("href")
+                -- Extract the path part of the URL
+               -- local path = fullUrl:match("^https?://[^/]+(/.*)$") or fullUrl
                 return NovelChapter {
                     order = v,
                     title = v:attr("title"),
-                    link = v:attr("href")
+                    link = v:attr("href"),
+                    -- link = path,
                 }
             end)
     )
