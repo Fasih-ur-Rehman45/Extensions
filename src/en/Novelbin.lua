@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.1.7","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.1.8","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 local subsite = "https://novelbin.lanovels.net"
@@ -144,7 +144,7 @@ local searchFilters = {
 --- @param chapterURL string @url of the chapter
 --- @return string @of chapter
 local function getPassage(chapterURL)
-    --chapterURL = baseURL .. chapterURL
+    chapterURL = baseURL .. chapterURL
     local htmlElement = GETDocument(chapterURL)
     local title = htmlElement:selectFirst(".chr-title"):attr("title")
     htmlElement = htmlElement:selectFirst("#chr-content")
@@ -223,14 +223,14 @@ local function parseNovel(novelURL)
         genres = map(document:select(".info > li:nth-child(2) a"), text),
         chapters = AsList(
             map(chapterDoc:select(".list-chapter li a"), function(v)
-                --local fullUrl = v:attr("href")
-                -- Extract the path part of the URL
-               -- local path = fullUrl:match("^https?://[^/]+(/.*)$") or fullUrl
+                local href = v:attr("href")
+                -- Extract path from URL, removing domain part
+                local path = href:gsub("^https?://[^/]+", "")
                 return NovelChapter {
                     order = v,
                     title = v:attr("title"),
-                    link = v:attr("href"),
-                    -- link = path,
+                    --link = v:attr("href"),
+                    link = path
                 }
             end)
     )
