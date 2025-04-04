@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.1.5","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.1.6","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 
@@ -224,8 +224,7 @@ local function parseNovel(novelURL)
                 return NovelChapter {
                     order = v,
                     title = v:attr("title"),
-                    link = v:attr("href"),
-                    print("link", v:attr("href"))
+                    link = v:attr("href")
                 }
             end)
     )
