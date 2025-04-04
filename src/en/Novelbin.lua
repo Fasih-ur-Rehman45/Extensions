@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.1.4","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.1.5","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 
@@ -140,7 +140,6 @@ local GENRE_VALUES = {
 local searchFilters = {
     DropdownFilter(GENRE_FILTER, "Genre", GENRE_VALUES),
 }
-
 --- @param chapterURL string @url of the chapter
 --- @return string @of chapter
 local function getPassage(chapterURL)
@@ -201,7 +200,7 @@ end
 local function parseNovel(novelURL)
     local url = baseURL .. "/" .. novelURL
     local document = GETDocument(url)
-    local chID = string.match(url, ".*/([^/]+)$")
+    local chID = document:selectFirst("#rating"):attr("data-novel-id")
     --TODO:Find A better way to get the chapter list
     local chapterURL = "https://novelbin.com/ajax/chapter-archive?novelId=" .. chID
     local chapterDoc = GETDocument(chapterURL)
@@ -225,7 +224,8 @@ local function parseNovel(novelURL)
                 return NovelChapter {
                     order = v,
                     title = v:attr("title"),
-                    link = v:attr("href")
+                    link = v:attr("href"),
+                    print("link", v:attr("href"))
                 }
             end)
     )
