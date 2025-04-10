@@ -135,9 +135,9 @@
       "fileName": "wtr-lab",
       "imageURL": "https://i.imgur.com/ObQtFVW.png",
       "lang": "en",
-      "ver": "1.0.9",
+      "ver": "1.0.10",
       "libVer": "1.0.0",
-      "md5": "e5d5997e7dc1924a085d260b8c872a83c477430ea0a733d4be5bd14e95c8736b",
+      "md5": "4e26e7fa73752726116aa27e1df0f6cf26a3110eef12e0325dbdf6cf95b30db7",
       "type": "LuaScript"
     }
   ],
