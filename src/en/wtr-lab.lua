@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.0.9","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.0.10","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -27,18 +27,26 @@ local isSearchIncrementing = true
 --- Filters configuration.
 local ORDER_FILTER_ID = 2
 local ORDER_PERM = {
+    "update",
     "view",
     "name",
     "date",
     "reader",
-    "chapter"
+    "chapter",
+    "rating",
+    "total_rate",
+    "vote"
 }
 local ORDER_VALUE = {
-    "View",
+    "Update Date",
+    "All-Time View",
     "Name",
     "Addition Date",
     "Reader",
-    "Chapter"
+    "Chapter",
+    "Rating",
+    "Review Count",
+    "Vote Count"
 }
 local SORT_FILTER_ID = 4
 local SORT_PERM = {
@@ -189,7 +197,7 @@ local listings = {
             if status ~= nil then
                 statusValue = FILTER_PERM[status + 1]
             end
-            local url = baseURL .. "en/novel-list?orderBy=" .. orderValue .. "&order=" .. sortValue .. "&status=" .. statusValue .. "&page=" .. page
+            local url = baseURL .. "en/novel-finder?orderBy=" .. orderValue .. "&order=" .. sortValue .. "&status=" .. statusValue .. "&page=" .. page
             local doc = GETDocument(url)
         
         return map(doc:select(".serie-item"), function(el)
