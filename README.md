@@ -33,6 +33,19 @@ A very generic how to:
      - [Lua Extension][lua-template]
 7. Make a PR of that branch into master
 
+### Commit Message style
+
+If you have the time and ability, I recommend following the [Conventional Commits][cc] standard.
+
+Here are some sample commit headers:
+
+1. `feat: Add site.url`
+2. `feat(extension-file-name): Add new filters`
+3. `fix(extension-file-name): Resolve novel parsing bug`
+4. `misc(extension-file-name): Update extension icon`
+5. `fix(index): Correct extension-file-name data`
+
+
 ### Icon creation
 
 Unique Icons can be created for each extension. 
