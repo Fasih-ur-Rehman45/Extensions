@@ -1,0 +1,151 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**/*.lua'
+      - 'index.json'
+  pull_request:
+    paths:
+      - 'src/**/*.lua'
+      - 'index.json'
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    container: openjdk:11
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Make script executable
+      run: chmod +x ./dev-setup.sh
+    
+    - name: Setup environment
+      run: |
+        if [ -x "$(command -v bash)" ]; then
+          bash ./dev-setup.sh --tester
+        else
+          sh ./dev-setup.sh --tester
+        fi
+    
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: bin
+        key: ${{ runner.os }}-bin-${{ hashFiles('dev-setup.sh') }}
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: bin-artifact
+        path: bin
+        retention-days: 1
+
+  validate_index:
+    needs: download
+    runs-on: ubuntu-latest
+    container: openjdk:11
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: bin-artifact
+        path: bin
+    - name: Validate index
+      run: |
+        java -jar bin/extension-tester.jar --ci --generate-index
+        DELTA=$(git diff --minimal -- index.json)
+        if [ ! -z "$DELTA" ]; then echo "Index file is not up to date: $DELTA"; exit 1; fi
+
+  validate_metadata:
+    needs: download
+    runs-on: ubuntu-latest
+    container: openjdk:11
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: bin-artifact
+        path: bin
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v41
+      with:
+        since_last_remote_commit: 'true'
+    - name: Validate metadata
+      run: |
+        if [ -n "${{ steps.changed-files.outputs.all_changed_files }}" ]; then
+          echo "Changed files found"
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            case "$file" in
+              *.lua)
+                echo "Validating Lua file: $file"
+                java -jar bin/extension-tester.jar --ci --validate-metadata "$file"
+                ;;
+              *)
+                echo "Skipping non-Lua file: $file"
+                ;;
+            esac
+          done
+        else
+          echo "No files changed, skipping validation"
+        fi
+
+  test:
+    needs: download
+    runs-on: ubuntu-latest
+    container: openjdk:11
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: bin-artifact
+        path: bin
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v41
+      with:
+        since_last_remote_commit: 'true'
+    - name: Test
+      run: |
+        if [ -n "index.json src/en/wtr-lab.lua" ]; then
+          echo "Changed files found"
+          for file in index.json src/en/wtr-lab.lua; do
+            case "$file" in
+              *.lua)
+                echo "Testing Lua file: $file"
+                java -jar bin/extension-tester.jar --ci "$file"
+                ;;
+             *)
+                echo "Skipping non-Lua file: $file"
+                ;;
+            esac
+         done
+        else
+          echo "No files changed, skipping tests"
+        fi
+
+  deploy:
+    needs: [validate_index, validate_metadata, test]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    container: openjdk:11
+    steps:
+    - uses: actions/checkout@v4
+    - name: Create public directory
+      run: |
+        mkdir public
+        cp -r src public/
+        cp -r lib public/
+        cp -r icons public/
+        cp index.json public/
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ github.token }}
+        publish_dir: ./public
+        keep_files: true
