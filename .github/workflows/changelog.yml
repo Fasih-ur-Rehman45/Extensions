@@ -49,6 +49,7 @@ jobs:
           release-name: v1.0.0
           mention-authors: true
           include-commit-links: true
+          use-github-autolink: true
 
       - name: Update CHANGELOG.md
         run: |
