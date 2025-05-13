@@ -4,11 +4,6 @@ name: Changelog
 on:
   push:
     branches: [main]
-    paths-ignore:
-    - 'README.md'
-    ##- '.github/**'
-    - 'test-server.sh'
-
 jobs:
   changelog:
     runs-on: ubuntu-latest
