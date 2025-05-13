@@ -14,6 +14,7 @@
 
 ## 🔧 Maintenance
 * **changelog:**
+  * remove duplicate mention-new-contributors and include-compare-link options (1ffb16e0e7c029a79e6d920179fd9e263184a4ea by @Fasih-ur-Rehman45)
   * use author information for changelog commits (b7220fb96073eb8aa32d3cf2d9f800b8b2f553f9 by @Fasih-ur-Rehman45)
   * add options for new contributors and compare link (1fa1f37574eba55ef92435c8298669f1c7966069 by @Fasih-ur-Rehman45)
   * enable GitHub autolink for changelog entries (cf1bc22fce8cb243e9555ca10bb970e023ca70f3 by @Fasih-ur-Rehman45)
@@ -28,7 +29,7 @@
 
 ## 📝 Documentation
 * **changelog:**
-  * update changelog (02709b2bc96da34c1335c64b72932f079b3aedfa & 643e51d472f3388afe99df1ac6ab220b7e7f65dd & 9039dab94206351dbdef57fc98f574aedfa688c8 & 603c9caab503378cc15594c4404589cbe3ec0a7b & ecd446f120998820debd74c5aae566c4a9f26dbb & 0cdef8ffb3038533af5f15d18781cccac8a49b0d & cdf898e2585f5cf450f87b39ec743284ce18f8fe by @actions-user)
+  * update changelog (164e9bffd0c8e7f65d23f07e079513be4fa70f17 by @Fasih-ur-Rehman45, 02709b2bc96da34c1335c64b72932f079b3aedfa & 643e51d472f3388afe99df1ac6ab220b7e7f65dd & 9039dab94206351dbdef57fc98f574aedfa688c8 & 603c9caab503378cc15594c4404589cbe3ec0a7b & ecd446f120998820debd74c5aae566c4a9f26dbb & 0cdef8ffb3038533af5f15d18781cccac8a49b0d & cdf898e2585f5cf450f87b39ec743284ce18f8fe by @actions-user)
 * **README:**
   * update link to Conventional Commits standard reference (973157386472b8d33e050f0e976748abc73e3c58 by @Fasih-ur-Rehman45)
   * update link to Conventional Commits standard (d88808202ca91d6e18f308d696d6561777140a56 by @Fasih-ur-Rehman45)
