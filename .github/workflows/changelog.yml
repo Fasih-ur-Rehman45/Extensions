@@ -3,6 +3,10 @@ name: Changelog
 on:
   push:
     branches: [main]
+    paths-ignore:
+     - 'README.md'
+     - 'test-server.sh'
+     - 'dev-setup.sh'
 
 permissions:
   contents: write
