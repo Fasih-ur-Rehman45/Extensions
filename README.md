@@ -35,7 +35,7 @@ A very generic how to:
 
 ### Commit Message style
 
-If you have the time and ability, I recommend following the [Conventional Commits][https://www.conventionalcommits.org/en/v1.0.0/] standard.
+If you have the time and ability, I recommend following the [Conventional Commits][cc] standard.
 
 Here are some sample commit headers:
 
@@ -58,3 +58,4 @@ Please ensure the source of the icons are present, so they can be edited later o
 [source-request]: https://gitlab.com/shosetsuorg/extensions/-/issues/new?issuable_template=source_request
 [bug-report]: https://gitlab.com/shosetsuorg/extensions/-/issues/new?issuable_template=bug_report
 [issues]: https://gitlab.com/shosetsuorg/extensions/-/issues
+[cc]: https://www.conventionalcommits.org/en/v1.0.0/
