@@ -48,7 +48,8 @@ jobs:
           default-commit-type: Other
           release-name: v1.0.0
           mention-authors: true
-          
+          include-commit-links: true
+
       - name: Update CHANGELOG.md
         run: |
           echo "${{ steps.changelog.outputs.changelog }}" > CHANGELOG.md
