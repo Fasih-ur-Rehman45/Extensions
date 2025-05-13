@@ -37,6 +37,7 @@ jobs:
             perf: Performance Improvements
             build: Build System & Dependencies
           default-commit-type: Other
+          release-name: v1.0.0
           mention-authors: true
           
       - name: Update CHANGELOG.md
