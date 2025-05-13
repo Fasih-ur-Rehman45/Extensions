@@ -50,6 +50,8 @@ jobs:
           mention-authors: true
           include-commit-links: true
           use-github-autolink: true
+          mention-new-contributors: true
+          include-compare-link: true
 
       - name: Update CHANGELOG.md
         run: |
