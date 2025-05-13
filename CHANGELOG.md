@@ -14,11 +14,14 @@
 
 ## Chores
 * **changelog:**
+  * add permissions section to workflow (26083128c66f231ad9440440d859845056a400bd by @Fasih-ur-Rehman45)
   * add release-name to changelog configuration (1c72ed87cb5c9afd470966f2c94fb83de37b06a1 by @Fasih-ur-Rehman45)
   * remove release-name from changelog workflow (a1c9f162242e9945148463f4035ba9f4d20c507b by @Fasih-ur-Rehman45)
   * remove paths-ignore for README.md and other files (4ae1503b6be353ff780e311bf1500889c0935133 by @Fasih-ur-Rehman45)
 
 ## Documentation
+* **changelog:**
+  * update changelog (cdf898e2585f5cf450f87b39ec743284ce18f8fe by @actions-user)
 * **README:**
   * update link to Conventional Commits standard reference (973157386472b8d33e050f0e976748abc73e3c58 by @Fasih-ur-Rehman45)
   * update link to Conventional Commits standard (d88808202ca91d6e18f308d696d6561777140a56 by @Fasih-ur-Rehman45)
