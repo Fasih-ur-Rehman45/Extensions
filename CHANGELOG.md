@@ -14,6 +14,7 @@
 
 ## 🔧 Maintenance
 * **changelog:**
+  * enable GitHub autolink for changelog entries (cf1bc22fce8cb243e9555ca10bb970e023ca70f3 by @Fasih-ur-Rehman45)
   * add include-commit-links option to changelog generation (9f66a9369964d3989ddbbd2f5704fda4574c7cfd by @Fasih-ur-Rehman45)
   * re-add paths-ignore section for clarity (e7e34574085629512219f2d6f0b1f13701158127 by @Fasih-ur-Rehman45)
   * remove paths-ignore section and update commit types with emojis (da20c07df702e812cedd072d850a29e79248db3e by @Fasih-ur-Rehman45)
@@ -25,7 +26,7 @@
 
 ## 📝 Documentation
 * **changelog:**
-  * update changelog (603c9caab503378cc15594c4404589cbe3ec0a7b & ecd446f120998820debd74c5aae566c4a9f26dbb & 0cdef8ffb3038533af5f15d18781cccac8a49b0d & cdf898e2585f5cf450f87b39ec743284ce18f8fe by @actions-user)
+  * update changelog (9039dab94206351dbdef57fc98f574aedfa688c8 & 603c9caab503378cc15594c4404589cbe3ec0a7b & ecd446f120998820debd74c5aae566c4a9f26dbb & 0cdef8ffb3038533af5f15d18781cccac8a49b0d & cdf898e2585f5cf450f87b39ec743284ce18f8fe by @actions-user)
 * **README:**
   * update link to Conventional Commits standard reference (973157386472b8d33e050f0e976748abc73e3c58 by @Fasih-ur-Rehman45)
   * update link to Conventional Commits standard (d88808202ca91d6e18f308d696d6561777140a56 by @Fasih-ur-Rehman45)
