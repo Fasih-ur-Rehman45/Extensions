@@ -3,10 +3,6 @@ name: Changelog
 on:
   push:
     branches: [main]
-    paths-ignore:
-     - 'README.md'
-     - '.github/**'
-     - 'test-server.sh'
 
 permissions:
   contents: write
@@ -35,16 +31,16 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           commit-types: |
-            feat: Features
-            fix: Bug Fixes
-            chore: Chores
-            docs: Documentation
-            refactor: Refactors
-            test: Tests
-            ci: CI/CD
-            style: Code Style
-            perf: Performance Improvements
-            build: Build System & Dependencies
+            feat: ✨ Features
+            fix: 🐛 Bug Fixes
+            chore: 🔧 Maintenance
+            docs: 📝 Documentation
+            refactor: ♻️ Refactors
+            test: 🧪 Tests
+            ci: 🔄 CI/CD
+            style: 💄 Code Style
+            perf: ⚡ Performance Improvements
+            build: 🏗️ Build System & Dependencies
           default-commit-type: Other
           release-name: v1.0.0
           mention-authors: true
