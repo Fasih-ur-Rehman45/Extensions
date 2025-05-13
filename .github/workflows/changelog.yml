@@ -48,10 +48,9 @@ jobs:
           default-commit-type: Other
           release-name: v1.0.0
           mention-authors: true
+          mention-new-contributors: true
           include-commit-links: true
           use-github-autolink: true
-          mention-new-contributors: true
-          include-compare-link: true
 
       - name: Update CHANGELOG.md
         run: |
