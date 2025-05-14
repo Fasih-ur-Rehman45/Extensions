@@ -14,6 +14,7 @@
 
 ## 🔧 Maintenance
 * **changelog:**
+  * simplify changelog processing steps for clarity ([e25c194](https://github.com/Fasih-ur-Rehman45/Extensions/commit/e25c194) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
   * streamline changelog generation and remove unused commit types ([3edbbfa](https://github.com/Fasih-ur-Rehman45/Extensions/commit/3edbbfa) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
   * remove duplicate mention-new-contributors and include-compare-link options ([1ffb16e](https://github.com/Fasih-ur-Rehman45/Extensions/commit/1ffb16e) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
   * use author information for changelog commits ([b7220fb](https://github.com/Fasih-ur-Rehman45/Extensions/commit/b7220fb) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
@@ -32,7 +33,7 @@
 
 ## 📝 Documentation
 * **changelog:**
-  * update changelog ([997c60a](https://github.com/Fasih-ur-Rehman45/Extensions/commit/997c60a) & [1af10f9](https://github.com/Fasih-ur-Rehman45/Extensions/commit/1af10f9) & [164e9bf](https://github.com/Fasih-ur-Rehman45/Extensions/commit/164e9bf) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)) [02709b2](https://github.com/Fasih-ur-Rehman45/Extensions/commit/02709b2) & [643e51d](https://github.com/Fasih-ur-Rehman45/Extensions/commit/643e51d) & [9039dab](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9039dab) & [603c9ca](https://github.com/Fasih-ur-Rehman45/Extensions/commit/603c9ca) & [ecd446f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ecd446f) & [0cdef8f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/0cdef8f) & [cdf898e](https://github.com/Fasih-ur-Rehman45/Extensions/commit/cdf898e) by ([@actions-user](https://github.com/actions-user)))
+  * update changelog ([ff559c4](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ff559c4) & [997c60a](https://github.com/Fasih-ur-Rehman45/Extensions/commit/997c60a) & [1af10f9](https://github.com/Fasih-ur-Rehman45/Extensions/commit/1af10f9) & [164e9bf](https://github.com/Fasih-ur-Rehman45/Extensions/commit/164e9bf) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)) [02709b2](https://github.com/Fasih-ur-Rehman45/Extensions/commit/02709b2) & [643e51d](https://github.com/Fasih-ur-Rehman45/Extensions/commit/643e51d) & [9039dab](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9039dab) & [603c9ca](https://github.com/Fasih-ur-Rehman45/Extensions/commit/603c9ca) & [ecd446f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ecd446f) & [0cdef8f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/0cdef8f) & [cdf898e](https://github.com/Fasih-ur-Rehman45/Extensions/commit/cdf898e) by ([@actions-user](https://github.com/actions-user)))
 * **README:**
   * update link to Conventional Commits standard reference ([9731573](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9731573) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
   * update link to Conventional Commits standard ([d888082](https://github.com/Fasih-ur-Rehman45/Extensions/commit/d888082) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
