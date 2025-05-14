@@ -1,40 +1,41 @@
 ## ✨ Features
 * **changelog:**
-  * update workflow to ensure CHANGELOG.md exists and generate automatically (f849d04d6e51f81897f3a3e2be3d399983eaf3b6 by @Fasih-ur-Rehman45)
-  * add GitHub Actions workflow for automatic changelog generation (6c1f3f1b0b8e1bb4e1b9026bf5c25e0b0c089e94 by @Fasih-ur-Rehman45)
+  * update workflow to ensure CHANGELOG.md exists and generate automatically ([f849d04](https://github.com/Fasih-ur-Rehman45/Extensions/commit/f849d04) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * add GitHub Actions workflow for automatic changelog generation ([6c1f3f1](https://github.com/Fasih-ur-Rehman45/Extensions/commit/6c1f3f1) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 * **config.yml:**
-  * Added config file for test and deploy (6010f0a2a551a59adab64ab5cd093e419172d1b6 by @Fasih-ur-Rehman45)
+  * Added config file for test and deploy ([6010f0a](https://github.com/Fasih-ur-Rehman45/Extensions/commit/6010f0a) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 
 ## 🐛 Bug Fixes
 * **index:**
-  * bump wtr-lab version to 1.0.12 and update checksum (a0c253b617052685565930e5c1c7b95fe6e39f0f by @Fasih-ur-Rehman45)
-  * update version for wtr-lab (ff5b51abe1780d21e8debca061845fad190c7a4c by @Fasih-ur-Rehman45)
+  * bump wtr-lab version to 1.0.12 and update checksum ([a0c253b](https://github.com/Fasih-ur-Rehman45/Extensions/commit/a0c253b) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * update version for wtr-lab ([ff5b51a](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ff5b51a) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 * **wtr-lab:**
-  * bump version to 1.0.12 and add translation service to payload (35e4ff2d126daba140f2945932f61bc2d3226018 by @Fasih-ur-Rehman45)
+  * bump version to 1.0.12 and add translation service to payload ([35e4ff2](https://github.com/Fasih-ur-Rehman45/Extensions/commit/35e4ff2) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 
 ## 🔧 Maintenance
 * **changelog:**
-  * remove duplicate mention-new-contributors and include-compare-link options (1ffb16e0e7c029a79e6d920179fd9e263184a4ea by @Fasih-ur-Rehman45)
-  * use author information for changelog commits (b7220fb96073eb8aa32d3cf2d9f800b8b2f553f9 by @Fasih-ur-Rehman45)
-  * add options for new contributors and compare link (1fa1f37574eba55ef92435c8298669f1c7966069 by @Fasih-ur-Rehman45)
-  * enable GitHub autolink for changelog entries (cf1bc22fce8cb243e9555ca10bb970e023ca70f3 by @Fasih-ur-Rehman45)
-  * add include-commit-links option to changelog generation (9f66a9369964d3989ddbbd2f5704fda4574c7cfd by @Fasih-ur-Rehman45)
-  * re-add paths-ignore section for clarity (e7e34574085629512219f2d6f0b1f13701158127 by @Fasih-ur-Rehman45)
-  * remove paths-ignore section and update commit types with emojis (da20c07df702e812cedd072d850a29e79248db3e by @Fasih-ur-Rehman45)
-  * update paths-ignore section in workflow (df80eaa6885bf61cb2dfba55ffd7887666e57de4 by @Fasih-ur-Rehman45)
-  * add permissions section to workflow (26083128c66f231ad9440440d859845056a400bd by @Fasih-ur-Rehman45)
-  * add release-name to changelog configuration (1c72ed87cb5c9afd470966f2c94fb83de37b06a1 by @Fasih-ur-Rehman45)
-  * remove release-name from changelog workflow (a1c9f162242e9945148463f4035ba9f4d20c507b by @Fasih-ur-Rehman45)
-  * remove paths-ignore for README.md and other files (4ae1503b6be353ff780e311bf1500889c0935133 by @Fasih-ur-Rehman45)
+  * streamline changelog generation and remove unused commit types ([3edbbfa](https://github.com/Fasih-ur-Rehman45/Extensions/commit/3edbbfa) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * remove duplicate mention-new-contributors and include-compare-link options ([1ffb16e](https://github.com/Fasih-ur-Rehman45/Extensions/commit/1ffb16e) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * use author information for changelog commits ([b7220fb](https://github.com/Fasih-ur-Rehman45/Extensions/commit/b7220fb) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * add options for new contributors and compare link ([1fa1f37](https://github.com/Fasih-ur-Rehman45/Extensions/commit/1fa1f37) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * enable GitHub autolink for changelog entries ([cf1bc22](https://github.com/Fasih-ur-Rehman45/Extensions/commit/cf1bc22) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * add include-commit-links option to changelog generation ([9f66a93](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9f66a93) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * re-add paths-ignore section for clarity ([e7e3457](https://github.com/Fasih-ur-Rehman45/Extensions/commit/e7e3457) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * remove paths-ignore section and update commit types with emojis ([da20c07](https://github.com/Fasih-ur-Rehman45/Extensions/commit/da20c07) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * update paths-ignore section in workflow ([df80eaa](https://github.com/Fasih-ur-Rehman45/Extensions/commit/df80eaa) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * add permissions section to workflow ([2608312](https://github.com/Fasih-ur-Rehman45/Extensions/commit/2608312) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * add release-name to changelog configuration ([1c72ed8](https://github.com/Fasih-ur-Rehman45/Extensions/commit/1c72ed8) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * remove release-name from changelog workflow ([a1c9f16](https://github.com/Fasih-ur-Rehman45/Extensions/commit/a1c9f16) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * remove paths-ignore for README.md and other files ([4ae1503](https://github.com/Fasih-ur-Rehman45/Extensions/commit/4ae1503) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 
 ## 📝 Documentation
 * **changelog:**
-  * update changelog (164e9bffd0c8e7f65d23f07e079513be4fa70f17 by @Fasih-ur-Rehman45, 02709b2bc96da34c1335c64b72932f079b3aedfa & 643e51d472f3388afe99df1ac6ab220b7e7f65dd & 9039dab94206351dbdef57fc98f574aedfa688c8 & 603c9caab503378cc15594c4404589cbe3ec0a7b & ecd446f120998820debd74c5aae566c4a9f26dbb & 0cdef8ffb3038533af5f15d18781cccac8a49b0d & cdf898e2585f5cf450f87b39ec743284ce18f8fe by @actions-user)
+  * update changelog ([1af10f9](https://github.com/Fasih-ur-Rehman45/Extensions/commit/1af10f9) & [164e9bf](https://github.com/Fasih-ur-Rehman45/Extensions/commit/164e9bf) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)) [02709b2](https://github.com/Fasih-ur-Rehman45/Extensions/commit/02709b2) & [643e51d](https://github.com/Fasih-ur-Rehman45/Extensions/commit/643e51d) & [9039dab](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9039dab) & [603c9ca](https://github.com/Fasih-ur-Rehman45/Extensions/commit/603c9ca) & [ecd446f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ecd446f) & [0cdef8f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/0cdef8f) & [cdf898e](https://github.com/Fasih-ur-Rehman45/Extensions/commit/cdf898e) by ([@actions-user](https://github.com/actions-user)))
 * **README:**
-  * update link to Conventional Commits standard reference (973157386472b8d33e050f0e976748abc73e3c58 by @Fasih-ur-Rehman45)
-  * update link to Conventional Commits standard (d88808202ca91d6e18f308d696d6561777140a56 by @Fasih-ur-Rehman45)
-  * add commit message style guidelines and examples (ea75cc58b878fa1e3bc333c34f8bfb238f0b6171 by @Fasih-ur-Rehman45)
+  * update link to Conventional Commits standard reference ([9731573](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9731573) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * update link to Conventional Commits standard ([d888082](https://github.com/Fasih-ur-Rehman45/Extensions/commit/d888082) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+  * add commit message style guidelines and examples ([ea75cc5](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ea75cc5) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 
 ## Other
-* index.json (63a8d751ed4b2dc18a32a10fdb25ee2056f19dbc by @Fasih-ur-Rehman45)
+* index.json ([63a8d75](https://github.com/Fasih-ur-Rehman45/Extensions/commit/63a8d75) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 
