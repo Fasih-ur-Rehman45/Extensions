@@ -48,13 +48,13 @@ jobs:
       # Process changelog output to match desired format
       - name: Process Changelog
         run: |
-             # Get the raw changelog
-             CHANGELOG="${{ steps.changelog.outputs.changelog }}"
-             echo "$CHANGELOG" > temp_changelog.md
-             sed 's/^- /\* /g' temp_changelog.md > formatted_changelog.md
-             sed -E 's#([a-f0-9]{7})[a-f0-9]* \& #[\1](https://github.com/${{ github.repository }}/commit/\1) \& #g' formatted_changelog.md > intermediate_changelog.md
-             sed -E 's#([a-f0-9]{7})[a-f0-9]* by @([a-zA-Z0-9._-]+),?#\[\1](https://github.com/${{ github.repository }}/commit/\1) by ([@\2](https://github.com/\2))#g' intermediate_changelog.md > CHANGELOG.md
-             rm temp_changelog.md formatted_changelog.md intermediate_changelog.md
+          # Get the raw changelog
+          CHANGELOG="${{ steps.changelog.outputs.changelog }}"
+          echo "$CHANGELOG" > temp_changelog.md
+          sed 's/^- /\* /g' temp_changelog.md > formatted_changelog.md
+          sed -E 's#([a-f0-9]{7})[a-f0-9]* \& #[\1](https://github.com/${{ github.repository }}/commit/\1) \& #g' formatted_changelog.md > intermediate_changelog.md
+          sed -E 's#([a-f0-9]{7})[a-f0-9]* by @([a-zA-Z0-9._-]+),?#\[\1](https://github.com/${{ github.repository }}/commit/\1) by ([@\2](https://github.com/\2))#g' intermediate_changelog.md > CHANGELOG.md
+          rm temp_changelog.md formatted_changelog.md intermediate_changelog.md
         
       - name: Commit and Push Changelog (if changed)
         run: |
