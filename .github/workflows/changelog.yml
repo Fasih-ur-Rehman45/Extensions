@@ -3,10 +3,6 @@ name: Changelog
 on:
   push:
     branches: [main]
-    paths-ignore:
-     - 'README.md'
-     - 'test-server.sh'
-     - 'dev-setup.sh'
 
 permissions:
   contents: write
@@ -42,9 +38,6 @@ jobs:
             refactor: ♻️ Refactors
             test: 🧪 Tests
             ci: 🔄 CI/CD
-            style: 💄 Code Style
-            perf: ⚡ Performance Improvements
-            build: 🏗️ Build System & Dependencies
           default-commit-type: Other
           release-name: v1.0.0
           mention-authors: true
@@ -52,16 +45,23 @@ jobs:
           include-commit-links: true
           use-github-autolink: true
 
-      - name: Update CHANGELOG.md
+      # Process changelog output to match desired format
+      - name: Process Changelog
         run: |
-          echo "${{ steps.changelog.outputs.changelog }}" > CHANGELOG.md
-
+          # Get the raw changelog
+          CHANGELOG="${{ steps.changelog.outputs.changelog }}"
+          echo "$CHANGELOG" > temp_changelog.md
+          cat temp_changelog.md | sed 's/^- /\* /g' > formatted_changelog.md
+          cat formatted_changelog.md | sed -E 's#([a-f0-9]{7})[a-f0-9]* \& #[\1](https://github.com/${{ github.repository }}/commit/\1) \& #g' > intermediate_changelog.md
+          cat intermediate_changelog.md | sed -E 's#([a-f0-9]{7})[a-f0-9]* by @([a-zA-Z0-9._-]+),?#\[\1](https://github.com/${{ github.repository }}/commit/\1) by ([@\2](https://github.com/\2))#g' > CHANGELOG.md
+          rm temp_changelog.md formatted_changelog.md intermediate_changelog.md
+      
       - name: Commit and Push Changelog (if changed)
         run: |
           AUTHOR_NAME=$(git log -1 --pretty=format:'%an')
           AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae')
           git config user.name "$AUTHOR_NAME"
-          git config user.email "$AUTHOR_EMAIL"  
+          git config user.email "$AUTHOR_EMAIL"
           git add CHANGELOG.md
           git diff --cached --quiet || {
             git commit -m "docs(changelog): update changelog"
