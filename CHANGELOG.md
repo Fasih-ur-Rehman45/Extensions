@@ -14,6 +14,7 @@
 
 ## 🔧 Maintenance
 * **changelog:**
+  * add paths-ignore for .github directory in changelog workflow ([5cc683f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/5cc683f) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
   * adjust formatting of changelog processing steps for consistency ([ca8f4f2](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ca8f4f2) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
   * simplify changelog processing steps for clarity ([e25c194](https://github.com/Fasih-ur-Rehman45/Extensions/commit/e25c194) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
   * streamline changelog generation and remove unused commit types ([3edbbfa](https://github.com/Fasih-ur-Rehman45/Extensions/commit/3edbbfa) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
@@ -31,10 +32,14 @@
   * remove paths-ignore for README.md and other files ([4ae1503](https://github.com/Fasih-ur-Rehman45/Extensions/commit/4ae1503) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 * **dev-setup:**
   * update extension tester download URL to the latest version ([4241359](https://github.com/Fasih-ur-Rehman45/Extensions/commit/4241359) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+* **index.json:**
+  * update WTR-LAB version to 1.0.13 ([77246f6](https://github.com/Fasih-ur-Rehman45/Extensions/commit/77246f6) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
+* **wtr-lab.lua:**
+  * update version to 1.0.13 ([d0ec052](https://github.com/Fasih-ur-Rehman45/Extensions/commit/d0ec052) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 
 ## 📝 Documentation
 * **changelog:**
-  * update changelog ([9202ebc](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9202ebc) & [ff559c4](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ff559c4) & [997c60a](https://github.com/Fasih-ur-Rehman45/Extensions/commit/997c60a) & [1af10f9](https://github.com/Fasih-ur-Rehman45/Extensions/commit/1af10f9) & [164e9bf](https://github.com/Fasih-ur-Rehman45/Extensions/commit/164e9bf) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)) [02709b2](https://github.com/Fasih-ur-Rehman45/Extensions/commit/02709b2) & [643e51d](https://github.com/Fasih-ur-Rehman45/Extensions/commit/643e51d) & [9039dab](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9039dab) & [603c9ca](https://github.com/Fasih-ur-Rehman45/Extensions/commit/603c9ca) & [ecd446f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ecd446f) & [0cdef8f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/0cdef8f) & [cdf898e](https://github.com/Fasih-ur-Rehman45/Extensions/commit/cdf898e) by ([@actions-user](https://github.com/actions-user)))
+  * update changelog ([190eafc](https://github.com/Fasih-ur-Rehman45/Extensions/commit/190eafc) & [9202ebc](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9202ebc) & [ff559c4](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ff559c4) & [997c60a](https://github.com/Fasih-ur-Rehman45/Extensions/commit/997c60a) & [1af10f9](https://github.com/Fasih-ur-Rehman45/Extensions/commit/1af10f9) & [164e9bf](https://github.com/Fasih-ur-Rehman45/Extensions/commit/164e9bf) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)) [02709b2](https://github.com/Fasih-ur-Rehman45/Extensions/commit/02709b2) & [643e51d](https://github.com/Fasih-ur-Rehman45/Extensions/commit/643e51d) & [9039dab](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9039dab) & [603c9ca](https://github.com/Fasih-ur-Rehman45/Extensions/commit/603c9ca) & [ecd446f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ecd446f) & [0cdef8f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/0cdef8f) & [cdf898e](https://github.com/Fasih-ur-Rehman45/Extensions/commit/cdf898e) by ([@actions-user](https://github.com/actions-user)))
 * **README:**
   * update link to Conventional Commits standard reference ([9731573](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9731573) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
   * update link to Conventional Commits standard ([d888082](https://github.com/Fasih-ur-Rehman45/Extensions/commit/d888082) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
