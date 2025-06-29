@@ -29,7 +29,7 @@ jobs:
 
       - name: Generate Changelog
         id: changelog
-        uses: ardalanamini/auto-changelog@v4.0.2
+        uses: ardalanamini/auto-changelog@v4.0.4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           commit-types: |
