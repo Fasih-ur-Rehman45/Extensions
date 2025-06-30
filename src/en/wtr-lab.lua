@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.0.13","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.0.14","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -111,6 +111,16 @@ local function getPassage(chapterURL)
     local responseBody = response:body():string()
     local jdata = json.decode(responseBody)
     local htmlContent = jdata.data.data.body
+    local placeholderMap = {}
+    for i, term in ipairs(jdata.data.data.glossary_data.terms) do
+        placeholderMap["※" .. (i-1) .. "⛬"] = term[1]
+    end
+    -- Process htmlContent as table
+    local lines = {}
+    for i, line in ipairs(htmlContent) do
+            lines[i] = line:gsub("※%d+⛬", placeholderMap)
+        end
+    htmlContent = lines
     local html = table.concat(map(htmlContent, function(v) return "<p>" .. v .. "</p>" end))
     local doc = Document(html)
     -- Traverse the document to remove empty <p> tags
