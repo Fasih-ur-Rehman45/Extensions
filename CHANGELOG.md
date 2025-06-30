@@ -35,18 +35,17 @@
 * **dev-setup:**
   * update extension tester download URL to the latest version ([4241359](https://github.com/Fasih-ur-Rehman45/Extensions/commit/4241359) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 * **index.json:**
+  * bump WTR-LAB version to 1.0.14 ([394c3e8](https://github.com/Fasih-ur-Rehman45/Extensions/commit/394c3e8) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
   * update WTR-LAB version to 1.0.13 ([77246f6](https://github.com/Fasih-ur-Rehman45/Extensions/commit/77246f6) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 * **wtr-lab.lua:**
+  * bump version to 1.0.14 and enhance passage extraction with glossary mapping ([09dd63c](https://github.com/Fasih-ur-Rehman45/Extensions/commit/09dd63c) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
   * update version to 1.0.13 ([d0ec052](https://github.com/Fasih-ur-Rehman45/Extensions/commit/d0ec052) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 
 ## 📝 Documentation
 * **changelog:**
-  * update changelog ([7d8efd0](https://github.com/Fasih-ur-Rehman45/Extensions/commit/7d8efd0) & [190eafc](https://github.com/Fasih-ur-Rehman45/Extensions/commit/190eafc) & [9202ebc](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9202ebc) & [ff559c4](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ff559c4) & [997c60a](https://github.com/Fasih-ur-Rehman45/Extensions/commit/997c60a) & [1af10f9](https://github.com/Fasih-ur-Rehman45/Extensions/commit/1af10f9) & [164e9bf](https://github.com/Fasih-ur-Rehman45/Extensions/commit/164e9bf) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)) [02709b2](https://github.com/Fasih-ur-Rehman45/Extensions/commit/02709b2) & [643e51d](https://github.com/Fasih-ur-Rehman45/Extensions/commit/643e51d) & [9039dab](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9039dab) & [603c9ca](https://github.com/Fasih-ur-Rehman45/Extensions/commit/603c9ca) & [ecd446f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ecd446f) & [0cdef8f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/0cdef8f) & [cdf898e](https://github.com/Fasih-ur-Rehman45/Extensions/commit/cdf898e) by ([@actions-user](https://github.com/actions-user)))
+  * update changelog ([d3c2bce](https://github.com/Fasih-ur-Rehman45/Extensions/commit/d3c2bce) & [7d8efd0](https://github.com/Fasih-ur-Rehman45/Extensions/commit/7d8efd0) & [190eafc](https://github.com/Fasih-ur-Rehman45/Extensions/commit/190eafc) & [9202ebc](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9202ebc) & [ff559c4](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ff559c4) & [997c60a](https://github.com/Fasih-ur-Rehman45/Extensions/commit/997c60a) & [1af10f9](https://github.com/Fasih-ur-Rehman45/Extensions/commit/1af10f9) & [164e9bf](https://github.com/Fasih-ur-Rehman45/Extensions/commit/164e9bf) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)) [02709b2](https://github.com/Fasih-ur-Rehman45/Extensions/commit/02709b2) & [643e51d](https://github.com/Fasih-ur-Rehman45/Extensions/commit/643e51d) & [9039dab](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9039dab) & [603c9ca](https://github.com/Fasih-ur-Rehman45/Extensions/commit/603c9ca) & [ecd446f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ecd446f) & [0cdef8f](https://github.com/Fasih-ur-Rehman45/Extensions/commit/0cdef8f) & [cdf898e](https://github.com/Fasih-ur-Rehman45/Extensions/commit/cdf898e) by ([@actions-user](https://github.com/actions-user)))
 * **README:**
   * update link to Conventional Commits standard reference ([9731573](https://github.com/Fasih-ur-Rehman45/Extensions/commit/9731573) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
   * update link to Conventional Commits standard ([d888082](https://github.com/Fasih-ur-Rehman45/Extensions/commit/d888082) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
   * add commit message style guidelines and examples ([ea75cc5](https://github.com/Fasih-ur-Rehman45/Extensions/commit/ea75cc5) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
-
-## Other
-* index.json ([63a8d75](https://github.com/Fasih-ur-Rehman45/Extensions/commit/63a8d75) by ([@Fasih-ur-Rehman45](https://github.com/Fasih-ur-Rehman45)))
 
