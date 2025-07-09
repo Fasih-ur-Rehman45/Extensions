@@ -128,24 +128,3 @@ jobs:
         else
           echo "No files changed, skipping tests"
         fi
-
-  deploy:
-    needs: [validate_index, validate_metadata, test]
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    container: openjdk:11
-    steps:
-    - uses: actions/checkout@v4
-    - name: Create public directory
-      run: |
-        mkdir public
-        cp -r src public/
-        cp -r lib public/
-        cp -r icons public/
-        cp index.json public/
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ github.token }}
-        publish_dir: ./public
-        keep_files: true
