@@ -1,4 +1,4 @@
--- {"id":101121,"ver":"1.0.0","libVer":"1.0.0","author":""}
+-- {"id":101121,"ver":"1.0.1","libVer":"1.0.0","author":""}
 
 local json = Require("dkjson")
 local bigint = Require("bigint")
@@ -97,7 +97,7 @@ end
 
 local function search(data)
     local query = data[QUERY]
-    local data = json.GET("https://chap.heliosarchive.online/wp-json/wp/v2/mvl-novels?per_page=10000")
+    local data = json.GET("https://chap.heliosarchive.online/wp-json/wp/v2/mvl-novels?per_page=5000&page=" .. data[PAGE])
     local novels = {}
     for _, novel in next, data do
         if novel.name:match(query) then
