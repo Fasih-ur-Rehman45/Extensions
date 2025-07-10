@@ -128,3 +128,11 @@ jobs:
         else
           echo "No files changed, skipping tests"
         fi
+    - name: Trigger Changelog Workflow
+      if: github.event_name == 'push'
+      run: |
+        curl -X POST \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+           https://api.github.com/repos/${{ github.repository }}/dispatches \
+           -d '{"event_type":"trigger_changelog"}'
