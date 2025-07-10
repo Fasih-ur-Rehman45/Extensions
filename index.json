@@ -112,7 +112,7 @@
       "name": "bigint",
       "ver": "1.0.0",
       "url": null,
-      "hash": "d443e565b65641a29fb40870054f2da42f5a88d507f01446ec1faecdf2d08cd7"
+      "hash": "790b1bdd45a5ff1589631265100fab53e70181537d2ec5f6ac89cf8ddc923843"
     },
     {
       "name": "dkjson",
@@ -124,13 +124,13 @@
       "name": "novelvault",
       "ver": "1.0.2",
       "url": null,
-      "hash": "ce5e02fc3343b5fb8a7d4d1596c4d88efd2cfe29e8a534d5cd96cfd54f049b55"
+      "hash": "260f4bf533359c7266d62a2092533dbee982ddda144546941892e8d8301d9d2d"
     },
     {
       "name": "unhtml",
       "ver": "1.0.1",
       "url": null,
-      "hash": "63b6ef999f37217ab752a7392e9ad4f8f706508a2360b4f0e883d00ef9d45af4"
+      "hash": "3ecb2c80afb4903be3f6827284f3fc8914f43fe31894f94fb35d47f40c03b73f"
     },
     {
       "name": "url",
