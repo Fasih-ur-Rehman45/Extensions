@@ -3,10 +3,7 @@ name: Changelog
 on:
   repository_dispatch:
     types: [trigger_changelog]
-
-    paths-ignore:
-      - ".github/**"
-
+    
 permissions:
   contents: write
   pull-requests: read
