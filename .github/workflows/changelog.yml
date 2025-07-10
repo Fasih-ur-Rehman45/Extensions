@@ -1,8 +1,9 @@
 name: Changelog
 
 on:
-  push:
-    branches: [main]
+  repository_dispatch:
+    types: [trigger_changelog]
+
     paths-ignore:
       - ".github/**"
 
