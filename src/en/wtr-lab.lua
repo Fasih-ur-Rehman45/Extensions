@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.0.14","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.0.15","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -112,8 +112,10 @@ local function getPassage(chapterURL)
     local jdata = json.decode(responseBody)
     local htmlContent = jdata.data.data.body
     local placeholderMap = {}
-    for i, term in ipairs(jdata.data.data.glossary_data.terms) do
-        placeholderMap["※" .. (i-1) .. "⛬"] = term[1]
+    if jdata.data.data.glossary_data and jdata.data.data.glossary_data.terms then
+        for i, term in ipairs(jdata.data.data.glossary_data.terms) do
+            placeholderMap["※" .. (i - 1) .. "⛬"] = term[1]
+        end
     end
     -- Process htmlContent as table
     local lines = {}
