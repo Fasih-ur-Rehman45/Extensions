@@ -8,9 +8,23 @@
       "website": ""
     },
     {
+      "id": 1550377221,
+      "name": "Bigrand",
+      "desc": "Worked on novelvault, unhtml",
+      "imageURL": "",
+      "website": ""
+    },
+    {
       "id": -2017179821,
       "name": "Doomsdayrs",
       "desc": "Worked on NovelFull, Syosetsu",
+      "imageURL": "",
+      "website": ""
+    },
+    {
+      "id": 0,
+      "name": "",
+      "desc": "Worked on MVLEMPYR",
       "imageURL": "",
       "website": ""
     },
@@ -25,6 +39,13 @@
       "id": 1379167306,
       "name": "David Kolf",
       "desc": "Worked on dkjson",
+      "imageURL": "",
+      "website": ""
+    },
+    {
+      "id": 320006131,
+      "name": "Emily empyreuma",
+      "desc": "Worked on bigint",
       "imageURL": "",
       "website": ""
     },
@@ -65,9 +86,9 @@
     },
     {
       "name": "Madara",
-      "ver": "2.9.1",
+      "ver": "2.9.2",
       "url": null,
-      "hash": "ed160e1ab15729bd19f26fdff7acbcac27d2d7be7727441f059ff893db549357"
+      "hash": "4c48a1e6530d3198d43d5a537a57965fcf9f8796e51837e7cf1d76f6ad87c879"
     },
     {
       "name": "NovelFull",
@@ -83,15 +104,33 @@
     },
     {
       "name": "XenForo",
-      "ver": "1.0.5",
+      "ver": "1.0.8",
       "url": null,
-      "hash": "99e92b56c773f2c567384bbb60962b612634915f328577953193cc70cc6e31c1"
+      "hash": "626981032aa06d15652fcf4b5cb4f9badac8a428282afc8d564f9d015b2e112f"
+    },
+    {
+      "name": "bigint",
+      "ver": "1.0.0",
+      "url": null,
+      "hash": "d443e565b65641a29fb40870054f2da42f5a88d507f01446ec1faecdf2d08cd7"
     },
     {
       "name": "dkjson",
       "ver": "1.0.1",
       "url": null,
       "hash": "97803cfe54b21695dda1e8f8a37c5933c4dc7691e5df17c2c1df6cef1203c259"
+    },
+    {
+      "name": "novelvault",
+      "ver": "1.0.2",
+      "url": null,
+      "hash": "ce5e02fc3343b5fb8a7d4d1596c4d88efd2cfe29e8a534d5cd96cfd54f049b55"
+    },
+    {
+      "name": "unhtml",
+      "ver": "1.0.1",
+      "url": null,
+      "hash": "63b6ef999f37217ab752a7392e9ad4f8f706508a2360b4f0e883d00ef9d45af4"
     },
     {
       "name": "url",
@@ -138,6 +177,17 @@
       "ver": "1.0.14",
       "libVer": "1.0.0",
       "md5": "9874c0a531cc3910006b182c0e5f48565cc94dd73e0433d95fb5ecd1d4281c90",
+      "type": "LuaScript"
+    },
+    {
+      "id": 101121,
+      "name": "MVLEMPYR",
+      "fileName": "mvlempyr",
+      "imageURL": "https://assets.mvlempyr.com/images/asset/LogoMage.webp",
+      "lang": "en",
+      "ver": "1.0.0",
+      "libVer": "1.0.0",
+      "md5": "7338e57f7da8a2c957898f365289349733fe2b55ea9bb3ff26b2e737d66ebf8f",
       "type": "LuaScript"
     }
   ],
