@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.1.8","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.1.9","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 local subsite = "https://novelbin.lanovels.net"
@@ -273,10 +273,10 @@ return {
     imageURL = "https://i.imgur.com/KQOwfMt.png",
     hasSearch = true,
     listings = {
-        getListing("Hot Novel", true, "/sort/top-hot"),
+        getListing("Hot Novel", true, "/sort/top-hot-novel"),
         getListing("Completed", true, "/sort/completed"),
-        getListing("Most Popular", true, "/sort/top-view"),
-        getListing("Latest Release", true, "/sort/daily-update")
+        getListing("Most Popular", true, "/sort/top-view-novel"),
+        getListing("Latest Release", true, "/sort/latest")
     },
     parseNovel = parseNovel,
     getPassage = getPassage,
