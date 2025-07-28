@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.0.15","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.0.16","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -11,12 +11,17 @@ local baseURL = "https://wtr-lab.com/"
 
 ---  Api URL of the ChapterData.
 local apiUrl =   "https://wtr-lab.com/api/reader/get"
+local Translation_url = "https://translate-pa.googleapis.com/v1/translateHtml"
+local autkey = "AIzaSyATBXajvzQLTDHEQbcpq0Ihe0vWDHmO520"
 
 --- URL of the logo.
 local imageURL = "https://i.imgur.com/ObQtFVW.png"
 
+
 --MediaType for JSON
 local mtype = MediaType("application/json; charset=utf-8")
+local mtype2 = MediaType("application/json+protobuf; charset=utf-8")
+
 
 --- Cloudflare protection status.
 local hasCloudFlare = false
@@ -99,6 +104,7 @@ local function getPassage(chapterURL)
     local script = doc:selectFirst("#__NEXT_DATA__"):html()
     local data = json.decode(script)
     local content = data.props.pageProps.serie
+    local ai_enabled = content.serie_data.ai_enabled
     local payload = {
         chapter_id = content.chapter.id,
         language = "en",
@@ -111,18 +117,40 @@ local function getPassage(chapterURL)
     local responseBody = response:body():string()
     local jdata = json.decode(responseBody)
     local htmlContent = jdata.data.data.body
-    local placeholderMap = {}
-    if jdata.data.data.glossary_data and jdata.data.data.glossary_data.terms then
-        for i, term in ipairs(jdata.data.data.glossary_data.terms) do
-            placeholderMap["※" .. (i - 1) .. "⛬"] = term[1]
+    -- Handle content based on ai_enabled
+    if not ai_enabled then
+        -- Translation logic when ai_enabled is false
+        local payload2 = {
+            {htmlContent, "zh-CN", "en"},
+            "wt_lib"
+        }
+        local body2 = RequestBody(json.encode(payload2), mtype2)
+        local headers2 = HeadersBuilder()
+            :add("Content-Type", "application/json+protobuf")
+            :add("Origin", baseURL)
+            :add("X-Goog-Api-Key", autkey)
+            :build()
+        local response2 = Request(POST(Translation_url, headers2, body2))
+        local responseBody2 = response2:body():string()
+        local jdata2 = json.decode(responseBody2)
+        htmlContent = jdata2[1] -- Update htmlContent with translated content
+    else
+        -- Original glossary replacement logic when ai_enabled is true
+        local placeholderMap = {}
+        if jdata.data.data.glossary_data and jdata.data.data.glossary_data.terms then
+            for i, term in ipairs(jdata.data.data.glossary_data.terms) do
+                placeholderMap["※" .. (i - 1) .. "⛬"] = term[1]
+            end
         end
-    end
-    -- Process htmlContent as table
-    local lines = {}
-    for i, line in ipairs(htmlContent) do
+        -- Process htmlContent as table
+        local lines = {}
+        for i, line in ipairs(htmlContent) do
             lines[i] = line:gsub("※%d+⛬", placeholderMap)
         end
-    htmlContent = lines
+        htmlContent = lines
+    end
+
+    -- Common processing for both translated and non-translated content
     local html = table.concat(map(htmlContent, function(v) return "<p>" .. v .. "</p>" end))
     local doc = Document(html)
     -- Traverse the document to remove empty <p> tags
@@ -160,7 +188,7 @@ local function parseNovel(novelURL)
         title = doc:selectFirst("h1.text-uppercase"):text(),
         imageURL = doc:selectFirst("div.image-wrap img"):attr("src"),
         description = doc:selectFirst(".description"):text(),
-        authors = {doc:select("td:matches(^Author$) + td a"):text()},
+        authors = {doc:select("td:matches(^Author$) + td div:last-child a"):text()},
         status = ({
             Ongoing = NovelStatus.PUBLISHING,
             Completed = NovelStatus.COMPLETED,
