@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.0.16","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.1.0","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -135,21 +135,36 @@ local function getPassage(chapterURL)
         local jdata2 = json.decode(responseBody2)
         htmlContent = jdata2[1] -- Update htmlContent with translated content
     else
-        -- Original glossary replacement logic when ai_enabled is true
+        -- Glossary replacement logic when ai_enabled is true
         local placeholderMap = {}
         if jdata.data.data.glossary_data and jdata.data.data.glossary_data.terms then
             for i, term in ipairs(jdata.data.data.glossary_data.terms) do
                 placeholderMap["※" .. (i - 1) .. "⛬"] = term[1]
             end
         end
-        -- Process htmlContent as table
+        -- Term replacement for patch data
+        local termMap = {}
+        if jdata.data.data.patch and jdata.data.data.patch[1] then
+            for _, term in ipairs(jdata.data.data.patch) do
+                termMap[term.zh] = " " .. term.en
+            end
+        end
+        -- Process htmlContent to apply glossary and patch replacements
         local lines = {}
         for i, line in ipairs(htmlContent) do
-            lines[i] = line:gsub("※%d+⛬", placeholderMap)
+            local updatedLine = line
+            -- Apply glossary placeholder replacements
+            for placeholder, replacement in pairs(placeholderMap) do
+                updatedLine = updatedLine:gsub(placeholder, replacement)
+            end
+            -- Apply patch term replacements (Chinese terms only)
+            for zh, en in pairs(termMap) do
+                updatedLine = updatedLine:gsub(zh, en)
+            end
+            lines[i] = updatedLine
         end
         htmlContent = lines
     end
-
     -- Common processing for both translated and non-translated content
     local html = table.concat(map(htmlContent, function(v) return "<p>" .. v .. "</p>" end))
     local doc = Document(html)
@@ -183,16 +198,15 @@ local function parseNovel(novelURL)
     local script = doc:selectFirst("#__NEXT_DATA__"):html()
     local data = json.decode(script)
     local serie = data.props.pageProps.serie
-
     local novelInfo = NovelInfo {
         title = doc:selectFirst("h1.text-uppercase"):text(),
         imageURL = doc:selectFirst("div.image-wrap img"):attr("src"),
         description = doc:selectFirst(".description"):text(),
-        authors = {doc:select("td:matches(^Author$) + td div:last-child a"):text()},
         status = ({
             Ongoing = NovelStatus.PUBLISHING,
             Completed = NovelStatus.COMPLETED,
         })[doc:selectFirst("td:matches(^Status$) + td"):text()],
+        authors = {doc:select("td:matches(^Author$) + td div:last-child a"):text()},
     }
     if isReleased then
         local endNum = serie.serie_data.chapter_count
