@@ -174,9 +174,9 @@
       "fileName": "wtr-lab",
       "imageURL": "https://i.imgur.com/ObQtFVW.png",
       "lang": "en",
-      "ver": "1.1.0",
+      "ver": "1.1.1",
       "libVer": "1.0.0",
-      "md5": "f7f5ed8183b01af041fc484ac745b5e955eeee0108e07aa73c87c8614fd9e176",
+      "md5": "2e723b8611c635a57ec6643fb287daf73e0be1149b1637e39f27e08a0ba14ce0",
       "type": "LuaScript"
     },
     {
@@ -187,7 +187,7 @@
       "lang": "en",
       "ver": "1.0.1",
       "libVer": "1.0.0",
-      "md5": "ffb222e523c7db04ddf4bdc459c8d74cbede62fd0fbaefe1d57939918903cc1c",
+      "md5": "74dd0d36f4201f99b80234cae88c0fdedd99a043a9774e60768a7c4ee50050a1",
       "type": "LuaScript"
     }
   ],
