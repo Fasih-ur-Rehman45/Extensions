@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.1.0","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.1.1","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -200,7 +200,7 @@ local function parseNovel(novelURL)
     local serie = data.props.pageProps.serie
     local novelInfo = NovelInfo {
         title = doc:selectFirst("h1.text-uppercase"):text(),
-        imageURL = doc:selectFirst("div.image-wrap img"):attr("src"),
+        imageURL = doc:selectFirst("div.image-wrap picture source"):attr("srcset"),
         description = doc:selectFirst(".description"):text(),
         status = ({
             Ongoing = NovelStatus.PUBLISHING,
