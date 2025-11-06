@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.1.1","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.1.2","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -275,7 +275,7 @@ local listings = {
             return Novel {
                 title = el:select(".title-wrap a"):text():gsub(el:select(".rawtitle"):text(), ""),
                 link = shrinkURL(el:select("a"):attr("href"), KEY_NOVEL_URL),
-                imageURL = el:select("img"):attr("src")
+                imageURL = el:select("picture source"):attr("srcset")
             }
         end)
     end),
