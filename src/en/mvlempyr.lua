@@ -1,4 +1,4 @@
--- {"id":101121,"ver":"1.0.1","libVer":"1.0.0","author":""}
+-- {"id":101121,"ver":"1.0.2","libVer":"1.0.0","author":""}
 
 local json = Require("dkjson")
 local bigint = Require("bigint")
