@@ -174,20 +174,20 @@
       "fileName": "wtr-lab",
       "imageURL": "https://i.imgur.com/ObQtFVW.png",
       "lang": "en",
-      "ver": "1.1.2",
+      "ver": "1.1.3",
       "libVer": "1.0.0",
-      "md5": "4b5ede84b217b41a255d4d52097f745068240092caebd7c2c87d5ac9019c2da7",
+      "md5": "85cdf1702bd987b780d205d36d711146d605df0e33b298f446b55da75e0d754b",
       "type": "LuaScript"
     },
     {
       "id": 101121,
       "name": "MVLEMPYR",
       "fileName": "mvlempyr",
-      "imageURL": "https://assets.mvlempyr.com/images/asset/LogoMage.webp",
+      "imageURL": "https://assets.mvlempyr.app/images/asset/LogoMage.webp",
       "lang": "en",
-      "ver": "1.0.2",
+      "ver": "1.0.3",
       "libVer": "1.0.0",
-      "md5": "07685cb402edb7b7a9b4c4e5d58133023827b355150369cfd4ecae13426c883e",
+      "md5": "d75c5c3d158fcb67195710aae6d712da2ffeb07be5ca431d05440d6ab6e4f85f",
       "type": "LuaScript"
     }
   ],

@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.1.2","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.1.3","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -11,6 +11,7 @@ local baseURL = "https://wtr-lab.com/"
 
 ---  Api URL of the ChapterData.
 local apiUrl =   "https://wtr-lab.com/api/reader/get"
+local proxyUrl = "https://wtr-lab-proxy.fly.dev/chapter"
 local Translation_url = "https://translate-pa.googleapis.com/v1/translateHtml"
 local autkey = "AIzaSyATBXajvzQLTDHEQbcpq0Ihe0vWDHmO520"
 
@@ -114,9 +115,28 @@ local function getPassage(chapterURL)
     local body = RequestBody(json.encode(payload), mtype)
     local headers = HeadersBuilder():add("Content-Type", "application/json"):add("Referer", url):build()
     local response = Request(POST(apiUrl, headers, body))
-    local responseBody = response:body():string()
-    local jdata = json.decode(responseBody)
-    local htmlContent = jdata.data.data.body
+    local apiResponseBody = response:body():string()
+    local jdata = json.decode(apiResponseBody)
+    local htmlContent
+    -- If ai_enabled is true, content is already AI-translated (no decryption needed)
+    if ai_enabled then
+        htmlContent = jdata.data.data.body
+    else
+        -- If ai_enabled is false, content is encrypted and needs decryption via proxy
+        local encryptedBody = jdata.data.data.body
+        local proxyPayload = { payload = encryptedBody }
+        local proxyBody = RequestBody(json.encode(proxyPayload), mtype)
+        local proxyHeaders = HeadersBuilder():add("Content-Type", "application/json"):build()
+        local proxyResponse = Request(POST(proxyUrl, proxyHeaders, proxyBody))
+        local responseBody = proxyResponse:body():string()
+        local decrypted, _, err = json.decode(responseBody)
+        if not decrypted then
+            print("[wtr-lab] Proxy/decryption unexpected response:", err, responseBody)
+            local fallbackHtml = tostring(responseBody)
+            return pageOfElem(Document(fallbackHtml), true)
+        end
+        htmlContent = decrypted
+    end
     -- Handle content based on ai_enabled
     if not ai_enabled then
         -- Translation logic when ai_enabled is false
@@ -200,7 +220,7 @@ local function parseNovel(novelURL)
     local serie = data.props.pageProps.serie
     local novelInfo = NovelInfo {
         title = doc:selectFirst("h1.text-uppercase"):text(),
-        imageURL = doc:selectFirst("div.image-wrap picture source"):attr("srcset"),
+        imageURL = doc:selectFirst("div.image-wrap.zoom img"):attr("src"),
         description = doc:selectFirst(".description"):text(),
         status = ({
             Ongoing = NovelStatus.PUBLISHING,

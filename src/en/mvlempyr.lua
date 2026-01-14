@@ -1,4 +1,4 @@
--- {"id":101121,"ver":"1.0.2","libVer":"1.0.0","author":""}
+-- {"id":101121,"ver":"1.0.3","libVer":"1.0.0","author":""}
 
 local json = Require("dkjson")
 local bigint = Require("bigint")
@@ -6,7 +6,7 @@ local bigint = Require("bigint")
 local id = 101121  -- Update with your extension ID
 local name = "MVLEMPYR"
 local chapterType = ChapterType.HTML
-local imageURL = "https://assets.mvlempyr.com/images/asset/LogoMage.webp"
+local imageURL = "https://assets.mvlempyr.app/images/asset/LogoMage.webp"
 
 ---@param v Element
 local text = function(v)
