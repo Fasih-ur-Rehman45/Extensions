@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.1.3","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.1.4","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -218,9 +218,11 @@ local function parseNovel(novelURL)
     local script = doc:selectFirst("#__NEXT_DATA__"):html()
     local data = json.decode(script)
     local serie = data.props.pageProps.serie
+    -- Handle both serie.serie_data.data.title and serie.serie_data.title
+    local serieData = serie.serie_data.data or serie.serie_data
     local novelInfo = NovelInfo {
-        title = doc:selectFirst("h1.text-uppercase"):text(),
-        imageURL = doc:selectFirst("div.image-wrap.zoom img"):attr("src"),
+        title = serieData.title,
+        imageURL = serie.serie_data.data.image,
         description = doc:selectFirst(".description"):text(),
         status = ({
             Ongoing = NovelStatus.PUBLISHING,
@@ -295,7 +297,7 @@ local listings = {
             return Novel {
                 title = el:select(".title-wrap a"):text():gsub(el:select(".rawtitle"):text(), ""),
                 link = shrinkURL(el:select("a"):attr("href"), KEY_NOVEL_URL),
-                imageURL = el:select("picture source"):attr("srcset")
+                imageURL = baseURL .. el:select("div.image-wrap.zoom img"):attr("src")
             }
         end)
     end),
@@ -307,7 +309,7 @@ local listings = {
             return Novel {
                 title = el:select(".title-wrap a"):text():gsub(el:select(".rawtitle"):text(), ""),
                 link = shrinkURL(el:select("a"):attr("href"), KEY_NOVEL_URL),
-                imageURL = el:select("img"):attr("src")
+                imageURL = baseURL .. el:select("img"):attr("src"),
             }
         end)
     end)
