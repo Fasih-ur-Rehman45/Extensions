@@ -1,4 +1,4 @@
--- {"ver":"1.0.8","author":"JFronny","dep":["unhtml>=1.0.0","url>=1.0.0"]}
+-- {"ver":"1.0.13","author":"JFronny","dep":["unhtml>=1.0.0","url>=1.0.0"]}
 
 local HTMLToString = Require("unhtml").HTMLToString
 local qs = Require("url").querystring
@@ -41,6 +41,28 @@ function defaults:expandURL(url)
     return self.baseURL .. "threads/" .. url
 end
 
+---@param document string
+---@param document Element
+local function fixImages(baseURL, document)
+    map(document:select(".bbCodeBlock-content"), function(v)
+        map(v:select("img.lazyload:not(noscript *)"), function(a)
+            local siblings = a:nextElementSiblings()
+            if siblings and siblings:size() > 0 then
+                local sibling = siblings:get(0)
+                a:attr("src", sibling:selectFirst("img"):attr("src"))
+                sibling:remove()
+            end
+        end)
+    end)
+    map(document:select("img"), function(v)
+        local src = v:attr("src")
+        if src:find("^/") then
+            src = baseURL .. src
+        end
+        v:attr("src", src)
+    end)
+end
+
 function defaults:getPassage(url)
     --- Chapter page, extract info from it.
     local doc = GETDocument(self.expandURL(url, KEY_CHAPTER_URL))
@@ -48,7 +70,8 @@ function defaults:getPassage(url)
     local post = doc:selectFirst("#js-" .. id)
     local message = post:selectFirst(".bbWrapper")
     message:select(".bbCodeBlock-expandLink, .bbCodeBlock-shrinkLink"):remove()
-    message:prepend("<h1>" .. post:selectFirst(".threadmarkLabel"):text() .. "</h1>")
+    message:select(".bbCodeSpoiler button"):remove()
+    fixImages(self.baseURL, message)
 
     return pageOfElem(message, true)
 end
@@ -103,12 +126,14 @@ function defaults:parseNovel(novelURL, loadChapters)
     else
         description = HTMLToString(description)
     end
+    local tags = map(threadmarks:select(".threadmarkListingHeader-tags a"), text)
     local novel = NovelInfo {
         title = title,
         imageURL = extractImage(self.baseURL, img),
         description = description,
         authors = map(username, text),
-        status = s
+        status = s,
+        genres = tags
     }
 
     if loadChapters then
@@ -151,6 +176,25 @@ local function handleNovelURL(url)
             :gsub("/unread$", "")
             :sub(10)
     return url
+end
+
+---@param shortNum string
+---@return number
+local function expandNumber(shortNum)
+    local number, suffix = shortNum:match("^(%d+%.?%d*)([kKmMbB]?)$")
+
+    number = tonumber(number)
+    if not number then return nil end
+
+    if suffix == "k" or suffix == "K" then
+        return math.floor(number * 1e3 + 0.5)
+    elseif suffix == "m" or suffix == "M" then
+        return math.floor(number * 1e6 + 0.5)
+    elseif suffix == "b" or suffix == "B" then
+        return math.floor(number * 1e9 + 0.5)
+    else
+        return math.floor(number + 0.5)
+    end
 end
 
 local CATEGORY_FILTER_KEY = 100
@@ -205,10 +249,24 @@ function defaults:search(data)
 
     return map(page:select(".block-body .contentRow"), function(v)
         local a = v:selectFirst(".contentRow-title a")
+        local wordCount = v:selectFirst("a[data-word_count]")
+        if wordCount then
+            wordCount = wordCount:attr("data-word_count")
+            if wordCount then
+                wordCount = tonumber(wordCount)
+            end
+        end
+        local author = v:selectFirst("a.username"):text()
+        local tags = map(v:select(".js-tagList a"), text)
         return Novel {
             title = extractTitle(a),
             link = handleNovelURL(a:attr("href")),
-            imageURL = extractImage(self.baseURL, v:selectFirst(".contentRow-figure img"))
+            imageURL = extractImage(self.baseURL, v:selectFirst(".contentRow-figure img")),
+            wordCount = wordCount,
+            authors = {
+                author
+            },
+            genres = tags
         }
     end)
 end
@@ -221,24 +279,42 @@ return function(baseURL, _self)
 
     _self["baseURL"] = baseURL
     local novelUrlBlacklist = _self["novelUrlBlacklist"] or "^$"
-    _self["listings"] = map(_self.forums, function(v)
-        return Listing(v.title, true, function(data)
+    _self["listings"] = map(_self.forums, function(l)
+        return Listing(l.title, true, function(data)
             --- @type int
             local page = data[PAGE]
-            local url = baseURL .. "forums/." .. v.forum .. "/page-" .. page .. "/"
+            local url = baseURL .. "forums/." .. l.forum .. "/page-" .. page .. "/"
             local doc = GETDocument(url)
 
-            local pageCount = tonumber(doc:selectFirst(".pageNav-main .pageNav-page:last-of-type a"):text())
+            local pageCountElem = doc:selectFirst(".pageNav-main .pageNav-page:last-of-type a")
+            local pageCount = tonumber(pageCountElem and pageCountElem:text() or "1")
             if page > pageCount then return {} end
 
             return mapNotNil(doc:select(".js-threadList .structItem--thread"), function(v)
                 local href = v:selectFirst(".structItem-title a"):attr("href")
                 href = handleNovelURL(href)
                 if href:match(novelUrlBlacklist) then return nil end
+                local parts = v:select(".structItem-parts li")
+                local wordCount
+                for i = 0, parts:size() - 1 do
+                    local part = parts:get(i):text()
+                    if part:match("^Words: ") ~= nil then
+                        part = part:gsub("^Words: ", "")
+                        wordCount = expandNumber(part)
+                        break
+                    end
+                end
+                local author = v:selectFirst("a.username"):text()
+                local tags = map(v:select("a.tagItem"), text)
                 return Novel {
                     title = extractTitle(v:selectFirst(".structItem-title")),
                     link = href,
-                    imageURL = extractImage(baseURL, v:selectFirst(".structItem-cell--icon img"))
+                    imageURL = extractImage(baseURL, v:selectFirst(".structItem-cell--icon img")),
+                    wordCount = wordCount,
+                    authors = {
+                        author
+                    },
+                    genres = tags
                 }
             end)
         end)

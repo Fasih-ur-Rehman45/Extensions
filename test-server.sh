@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/usr/bin/env bash
 set -euo pipefail
 
 # This file simply runs an http server locally and watches for changes in extensions to update the index.
@@ -13,9 +13,13 @@ set -euo pipefail
 # 5. Test your changes
 # 6. Repeat steps 3-5 as needed
 
-# Ensure that jwebserver is available and the extension-tester.jar is downloaded
-if ! command -v jwebserver &> /dev/null; then
-  echo "jwebserver not found. Please ensure you have an up-to-date version of java installed and in your PATH."
+# Ensure that java is available and the extension-tester.jar is downloaded
+if command -v java &> /dev/null; then
+  _java=$(command -v java)
+elif [ -n "${JAVA_HOME:-}" ] && [ -x "$JAVA_HOME/bin/java" ]; then
+  _java="$JAVA_HOME/bin/java"
+else
+  echo "java not found. Please ensure you have an up-to-date version of java installed and in your PATH."
   exit 1
 fi
 if [ ! -f bin/extension-tester.jar ]; then
@@ -23,23 +27,12 @@ if [ ! -f bin/extension-tester.jar ]; then
   ./dev-setup.sh --tester
 fi
 
-# Function to handle termination signals
-cleanup() {
-  set +u # if pids are not set, that's fine
-  kill -SIGINT "$jwebserver_pid" "$java_pid" 2>/dev/null || true
-}
+# Ensure java version is at least 21
+_java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{sub("^$", "0", $2); print $1$2}')
+if [ "$_java_version" -lt 210 ]; then
+  echo "java version is less than 21. Please update your java installation."
+  exit 1
+fi
 
-# Trap termination signals and call cleanup
-trap cleanup SIGINT SIGTERM
-
-# Start index generation process and save its PID
-(java -jar bin/extension-tester.jar --generate-index --watch || cleanup) &
-java_pid=$!
-
-# Start jwebserver and save its PID
-(jwebserver -b :: || cleanup) &
-jwebserver_pid=$!
-
-# Wait for both processes to finish
-wait "$jwebserver_pid"
-wait "$java_pid"
+# Start the index generation/http server
+exec java -jar bin/extension-tester.jar --generate-index --watch --host
