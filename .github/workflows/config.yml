@@ -14,7 +14,7 @@ on:
 jobs:
   download:
     runs-on: ubuntu-latest
-    container: openjdk:11
+    container: eclipse-temurin:11-jdk
     steps:
     - uses: actions/checkout@v4
     
@@ -45,7 +45,7 @@ jobs:
   validate_index:
     needs: download
     runs-on: ubuntu-latest
-    container: openjdk:11
+    container: eclipse-temurin:11-jdk
     steps:
     - uses: actions/checkout@v4
     - name: Download artifacts
@@ -62,7 +62,7 @@ jobs:
   validate_metadata:
     needs: download
     runs-on: ubuntu-latest
-    container: openjdk:11
+    container: eclipse-temurin:11-jdk
     steps:
     - uses: actions/checkout@v4
     - name: Download artifacts
@@ -97,7 +97,7 @@ jobs:
   test:
     needs: download
     runs-on: ubuntu-latest
-    container: openjdk:11
+    container: eclipse-temurin:11-jdk
     steps:
     - uses: actions/checkout@v4
     - name: Download artifacts
