@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.1.9","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"1.1.20","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 local subsite = "https://novelbin.lanovels.net"
@@ -19,11 +19,10 @@ end
 ---@param type int
 local function expandURL(url)
     return baseURL .. "/" .. url
-
 end
 
 local GENRE_FILTER = 2
-local GENRE_PARAMS = { 
+local GENRE_PARAMS = {
     "",
     "/genre/action",
     "/genre/adult",
@@ -154,14 +153,14 @@ local function getPassage(chapterURL)
     htmlElement:traverse(NodeVisitor(function(v)
         if v:tagName() == "p" then
             if v:text() == "" then
-                toRemove[#toRemove+1] = v
+                toRemove[#toRemove + 1] = v
             else
                 local textContent = v:text()
                 v:text(textContent:gsub("<", "&lt;"):gsub(">", "&gt;"))
             end
         end
     end, nil, true))
-    for _,v in pairs(toRemove) do
+    for _, v in pairs(toRemove) do
         v:remove()
     end
     local ht = "<h1>" .. title .. "</h1>"
@@ -204,7 +203,7 @@ local function parseNovel(novelURL)
     local document = GETDocument(url)
     local chID = document:selectFirst("#rating"):attr("data-novel-id")
     --TODO:Find A better way to get the chapter list
-    local chapterURL = baseURL.. "/ajax/chapter-archive?novelId=" .. chID
+    local chapterURL = baseURL .. "/ajax/chapter-archive?novelId=" .. chID
     local chapterDoc = GETDocument(chapterURL)
     local first_li_element = document:selectFirst('.info > li')
     if first_li_element and string.find(first_li_element:text(), "Alternative names") then
@@ -222,19 +221,27 @@ local function parseNovel(novelURL)
         authors = { document:selectFirst(".info > li:nth-child(1)"):text() },
         genres = map(document:select(".info > li:nth-child(2) a"), text),
         chapters = AsList(
-            map(chapterDoc:select(".list-chapter li a"), function(v)
-                local href = v:attr("href")
-                -- Extract path from URL, removing domain part
-                local path = href:gsub("^https?://[^/]+", "")
-                return NovelChapter {
-                    order = v,
-                    title = v:attr("title"),
-                    --link = v:attr("href"),
-                    link = path
-                }
-            end)
-    )
-}
+            map(
+                filter(
+                    chapterDoc:select("li[data-chapter-item] a"),function(v)
+                        -- Keep only free chapters (filter out paid/premium)
+                        return v:selectFirst("span.premium-label") == nil
+                            and v:selectFirst("span.paid-label") == nil
+                    end
+                ),
+                function(v)
+                    -- Now map only processes free chapters, no nil returns needed
+                    local href = v:attr("href")
+                    local path = href:gsub("^https?://[^/]+", "")
+                    return NovelChapter {
+                        order = v,
+                        title = v:attr("title"),
+                        link = path
+                    }
+                end
+            )
+        )
+    }
 end
 
 local function parseListing(listingURL)
@@ -256,7 +263,7 @@ local function getListing(name, inc, sortString)
         local page = data[PAGE]
         local genreValue = ""
         if genre ~= nil then
-            genreValue = GENRE_PARAMS[genre+1]
+            genreValue = GENRE_PARAMS[genre + 1]
         end
         local url = baseURL .. genreValue .. "?page=" .. page
         if genreValue == "" then
