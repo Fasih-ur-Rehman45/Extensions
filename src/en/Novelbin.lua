@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"1.1.20","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"2.0.0","libVer":"1.0.0","author":"Confident-hate"}
 
 local baseURL = "https://novelbin.com"
 local subsite = "https://novelbin.lanovels.net"
@@ -210,6 +210,16 @@ local function parseNovel(novelURL)
         first_li_element:remove()
     end
 
+    -- Extract paid chapter URLs from vip-content section
+    local paidChapters = {}
+    local vipContent = document:selectFirst(".vip-content")
+    if vipContent then
+        map(vipContent:select("li.list-group-item a"), function(link)
+            paidChapters[link:attr("href")] = true
+            return link
+        end)
+    end
+
     return NovelInfo {
         title = document:selectFirst(".title"):text(),
         description = document:selectFirst(".desc-text"):text(),
@@ -221,24 +231,19 @@ local function parseNovel(novelURL)
         authors = { document:selectFirst(".info > li:nth-child(1)"):text() },
         genres = map(document:select(".info > li:nth-child(2) a"), text),
         chapters = AsList(
-            map(
-                filter(
-                    chapterDoc:select("li[data-chapter-item] a"),function(v)
-                        -- Keep only free chapters (filter out paid/premium)
-                        return v:selectFirst("span.premium-label") == nil
-                            and v:selectFirst("span.paid-label") == nil
-                    end
-                ),
-                function(v)
-                    -- Now map only processes free chapters, no nil returns needed
-                    local href = v:attr("href")
-                    local path = href:gsub("^https?://[^/]+", "")
-                    return NovelChapter {
-                        order = v,
-                        title = v:attr("title"),
-                        link = path
-                    }
+            map(chapterDoc:select("li[data-chapter-item] a"), function(v)
+                -- Skip chapters that are in the vip-content paid list
+                if paidChapters[v:attr("href")] then
+                    return nil
                 end
+                local href = v:attr("href")
+                local path = href:gsub("^https?://[^/]+", "")
+                return NovelChapter {
+                    order = v,
+                    title = v:attr("title"),
+                    link = path
+                }
+            end
             )
         )
     }
