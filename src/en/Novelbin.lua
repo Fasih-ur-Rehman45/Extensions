@@ -1,24 +1,56 @@
--- {"id":10121,"ver":"2.0.0","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"2.0.1","libVer":"1.0.0","author":"Confident-hate"}
 
-local baseURL = "https://novelbin.com"
-local subsite = "https://novelbin.lanovels.net"
+local json = Require("dkjson")
+
+local baseURL = "https://novelarrow.com"
 
 ---@param v Element
 local text = function(v)
     return v:text()
 end
 
-
 ---@param url string
 ---@param type int
 local function shrinkURL(url)
-    return url:gsub("https://novelbin.com/", "")
+    return tostring(url):gsub("^https?://[^/]+", ""):gsub("^/", "")
 end
 
 ---@param url string
 ---@param type int
 local function expandURL(url)
     return baseURL .. "/" .. url
+end
+
+local function normalizeNovelURL(novelURL)
+    novelURL = tostring(novelURL):gsub("^/+", "")
+    novelURL = novelURL:gsub("^b/", "novel/")
+    if not novelURL:match("^novel/") then
+        novelURL = "novel/" .. novelURL
+    end
+    return novelURL
+end
+
+local function getNovelSlug(novelURL)
+    return normalizeNovelURL(novelURL):gsub("^novel/", "")
+end
+
+local function isFreeChapter(chapter)
+    return not chapter.premium_content and not chapter.platinum_content and tonumber(chapter.coin_price or 0) == 0
+end
+
+local function safeJsonGet(url)
+    local ok, res = pcall(json.GET, url)
+    if not ok or not res then
+        return nil
+    end
+    if type(res) == "string" then
+        local decoded = json.decode(res)
+        if decoded then
+            return decoded
+        end
+        return nil
+    end
+    return res
 end
 
 local GENRE_FILTER = 2
@@ -140,128 +172,179 @@ local GENRE_VALUES = {
 local searchFilters = {
     DropdownFilter(GENRE_FILTER, "Genre", GENRE_VALUES),
 }
+
 --- @param chapterURL string @url of the chapter
 --- @return string @of chapter
 local function getPassage(chapterURL)
-    chapterURL = baseURL .. chapterURL
-    local htmlElement = GETDocument(chapterURL)
-    local title = htmlElement:selectFirst(".chr-title"):attr("title")
-    htmlElement = htmlElement:selectFirst("#chr-content")
-    htmlElement:select("div,h6,p[style='display: none;']"):remove()
-    local chapterText = htmlElement:html() or ""
-    local toRemove = {}
-    htmlElement:traverse(NodeVisitor(function(v)
-        if v:tagName() == "p" then
-            if v:text() == "" then
-                toRemove[#toRemove + 1] = v
-            else
-                local textContent = v:text()
-                v:text(textContent:gsub("<", "&lt;"):gsub(">", "&gt;"))
+    local cleanedURL = tostring(chapterURL):gsub("^/+", ""):gsub("^chapter/", "")
+    local novelSlug, chapterSlug = cleanedURL:match("([^/]+)/([^/]+)")
+    
+    if not novelSlug or not chapterSlug then return "" end
+    
+    local apiEndpoint = baseURL .. "/api-web/novels/" .. novelSlug .. "/chapters/" .. chapterSlug
+    local response = safeJsonGet(apiEndpoint)
+    
+    local finalHtmlContent = ""
+    
+    if response and response.item and response.item.chapterInfo then
+        local chapterTitle = response.item.chapterInfo.chapter_name or ""
+        if chapterTitle ~= "" then
+            finalHtmlContent = "<h1>" .. chapterTitle .. "</h1>"
+        end
+        
+        local rawContent = response.item.chapterInfo.chapter_content or ""
+        local doc = Document(rawContent)
+        local pTags = doc:select("p")
+        
+        for i = 0, pTags:size() - 1 do
+            local p = pTags:get(i)
+            local t = p:text()
+            if t and t ~= "" then
+                finalHtmlContent = finalHtmlContent .. "<br><br>" .. t
             end
         end
-    end, nil, true))
-    for _, v in pairs(toRemove) do
-        v:remove()
     end
-    local ht = "<h1>" .. title .. "</h1>"
-    local pTagList = map(htmlElement:select("p"), text)
-    local pCount = #pTagList
-    local brCount = 0
-    for _ in chapterText:gmatch("<br>") do
-        brCount = brCount + 1
-    end
-    if pCount > brCount then
-        local htmlContent = ""
-        for _, v in pairs(pTagList) do
-            htmlContent = htmlContent .. "<br><br>" .. v
+    
+    return finalHtmlContent
+end
+
+local function parseListing(listingURL)
+    local document = GETDocument(listingURL)
+    local novels = {}
+    local seen = {}
+    local anchors = document:select("a[href^='/novel/']")
+    for i = 0, anchors:size() - 1 do
+        local anchor = anchors:get(i)
+        local href = anchor:attr("href") and tostring(anchor:attr("href")) or ""
+        if href ~= "" and not seen[href] then
+            local title = anchor:attr("title") and tostring(anchor:attr("title")) or anchor:text()
+            local imageElement = anchor:selectFirst("img")
+            if title ~= "" or imageElement then
+                seen[href] = true
+                novels[#novels + 1] = Novel {
+                    title = title,
+                    imageURL = imageElement and imageElement:attr("src") or "",
+                    link = shrinkURL(href)
+                }
+            end
         end
-        ht = ht .. htmlContent
-    else
-        ht = ht .. chapterText
     end
-    return pageOfElem(Document(ht), true)
+    return novels
 end
 
 --- @param data table
 local function search(data)
     local queryContent = data[QUERY]
     local page = data[PAGE]
-    local doc = GETDocument(baseURL .. "/search/?keyword=" .. queryContent .. "&page=" .. page)
-    return map(doc:selectFirst(".list.list-novel"):select(".row"), function(v)
-        return Novel {
-            title = v:selectFirst(".novel-title"):text(),
-            imageURL = v:selectFirst("img.cover"):attr("src"):gsub("_200_89", ""),
-            link = shrinkURL(v:selectFirst(".novel-title a"):attr("href"))
-        }
-    end)
+    -- Updated to use the correct /novels/search endpoint path
+    local searchURL = baseURL .. "/novels/search?keyword=" .. queryContent .. "&page=" .. page
+    return parseListing(searchURL)
 end
 
 --- @param novelURL string @URL of novel
 --- @return NovelInfo
 local function parseNovel(novelURL)
-    local url = baseURL .. "/" .. novelURL
+    local novelPath = normalizeNovelURL(novelURL)
+    local novelSlug = getNovelSlug(novelURL)
+    
+    -- 1. Get the Cover Image and Genres from HTML
+    local url = baseURL .. "/" .. novelPath
     local document = GETDocument(url)
-    local chID = document:selectFirst("#rating"):attr("data-novel-id")
-    --TODO:Find A better way to get the chapter list
-    local chapterURL = baseURL .. "/ajax/chapter-archive?novelId=" .. chID
-    local chapterDoc = GETDocument(chapterURL)
-    local first_li_element = document:selectFirst('.info > li')
-    if first_li_element and string.find(first_li_element:text(), "Alternative names") then
-        first_li_element:remove()
+    local imageElement = document:selectFirst("main img")
+    local finalImageURL = imageElement and imageElement:attr("src") or ""
+    local genreLinks = document:select("a[href^='/genre/']")
+
+    -- 2. Get Metadata from the JSON API
+    local metadataEndpoint = baseURL .. "/api-web/novels/" .. novelSlug
+    local metaResponse = safeJsonGet(metadataEndpoint)
+    
+    local finalTitle = ""
+    local finalAuthor = "Author: Unknown"
+    local finalStatus = NovelStatus.UNKNOWN
+    local finalDesc = ""
+
+    if metaResponse and metaResponse.item and metaResponse.item.novelInfo then
+        local info = metaResponse.item.novelInfo
+        
+        -- Title & Author
+        finalTitle = info.novel_name or ""
+        local rawAuthor = info.novel_author or "Unknown"
+        finalAuthor = "Author: " .. rawAuthor
+        
+        -- Status (0 = Ongoing, others usually complete)
+        if info.novel_status == 0 then
+            finalStatus = NovelStatus.PUBLISHING
+        else
+            finalStatus = NovelStatus.COMPLETED
+        end
+        
+        -- Description (Parse HTML <p> tags into plain text from the API payload)
+        if info.novel_desc then
+            local doc = Document(info.novel_desc)
+            local pTags = doc:select("p")
+            for i = 0, pTags:size() - 1 do
+                local pText = pTags:get(i):text()
+                if pText and pText ~= "" then
+                    finalDesc = finalDesc .. pText .. "\n\n"
+                end
+            end
+        end
     end
 
-    -- Extract paid chapter URLs from vip-content section
-    local paidChapters = {}
-    local vipContent = document:selectFirst(".vip-content")
-    if vipContent then
-        map(vipContent:select("li.list-group-item a"), function(link)
-            paidChapters[link:attr("href")] = true
-            return link
-        end)
+    -- HTML Fallback (Just in case the API fails for the title)
+    if finalTitle == "" then
+        local titleElement = document:selectFirst("h1")
+        finalTitle = titleElement and titleElement:text() or ""
+    end
+
+    -- 3. Get Chapters List from JSON API
+    local chaptersEndpoint = baseURL .. "/api-web/novels/" .. novelSlug .. "/chapters"
+    local chaptersResponse = safeJsonGet(chaptersEndpoint)
+    local chapterItems = chaptersResponse and (chaptersResponse.items or chaptersResponse) or {}
+    
+    local chapters = {}
+    local chapterOrder = 0
+
+    for _, chapter in ipairs(chapterItems) do
+        if isFreeChapter(chapter) then
+            chapterOrder = chapterOrder + 1
+            local chapterId = tostring(chapter.chapter_id or "")
+            if chapterId ~= "" then
+                chapters[#chapters + 1] = NovelChapter {
+                    order = chapterOrder,
+                    title = tostring(chapter.chapter_name or chapterId),
+                    release = tostring(chapter.release_date or chapter.published_at or chapter.created_at or ""),
+                    link = shrinkURL("/chapter/" .. novelSlug .. "/" .. chapterId)
+                }
+            end
+        end
+    end
+
+    -- Chapter Fallback (If API is empty)
+    if #chapters == 0 then
+        local chapterLink = document:selectFirst("a[href^='/chapter/'][href*='chapter-1']") or document:selectFirst("a[href^='/chapter/']")
+        local chapterHref = chapterLink and chapterLink:attr("href") or ""
+        chapters = {
+            NovelChapter {
+                order = 1,
+                title = chapterLink and chapterLink:text() or "Chapter 1",
+                release = "",
+                link = shrinkURL(chapterHref)
+            }
+        }
     end
 
     return NovelInfo {
-        title = document:selectFirst(".title"):text(),
-        description = document:selectFirst(".desc-text"):text(),
-        imageURL = document:selectFirst(".books .book img"):attr("data-src"),
-        status = ({
-            Ongoing = NovelStatus.PUBLISHING,
-            Completed = NovelStatus.COMPLETED,
-        })[document:selectFirst(".info .text-primary"):text()],
-        authors = { document:selectFirst(".info > li:nth-child(1)"):text() },
-        genres = map(document:select(".info > li:nth-child(2) a"), text),
-        chapters = AsList(
-            map(chapterDoc:select("li[data-chapter-item] a"), function(v)
-                -- Skip chapters that are in the vip-content paid list
-                if paidChapters[v:attr("href")] then
-                    return nil
-                end
-                local href = v:attr("href")
-                local path = href:gsub("^https?://[^/]+", "")
-                return NovelChapter {
-                    order = v,
-                    title = v:attr("title"),
-                    link = path
-                }
-            end
-            )
-        )
+        title = finalTitle,
+        description = finalDesc,
+        imageURL = finalImageURL,
+        status = finalStatus,
+        authors = { finalAuthor },
+        genres = map(genreLinks, text),
+        chapters = AsList(chapters)
     }
 end
 
-local function parseListing(listingURL)
-    local document = GETDocument(listingURL)
-    return map(document:selectFirst(".list.list-novel"):select(".row"), function(v)
-        return Novel {
-            title = v:selectFirst(".novel-title"):text(),
-            imageURL = v:selectFirst("img.cover"):attr("data-src"):gsub("_200_89", ""),
-            link = shrinkURL(v:selectFirst(".novel-title a"):attr("href"))
-        }
-    end)
-end
-
-
--- local function getListing(data)
 local function getListing(name, inc, sortString)
     return Listing(name, inc, function(data)
         local genre = data[GENRE_FILTER]
@@ -285,10 +368,10 @@ return {
     imageURL = "https://i.imgur.com/KQOwfMt.png",
     hasSearch = true,
     listings = {
-        getListing("Hot Novel", true, "/sort/top-hot-novel"),
-        getListing("Completed", true, "/sort/completed"),
-        getListing("Most Popular", true, "/sort/top-view-novel"),
-        getListing("Latest Release", true, "/sort/latest")
+        getListing("Hot Novels", true, "/novels/hot"),
+        getListing("Completed Novels", true, "/novels/complete"),
+        getListing("Ongoing Novels", true, "/novels/ongoing"),
+        getListing("Latest Novels", true, "/novels/latest")
     },
     parseNovel = parseNovel,
     getPassage = getPassage,
