@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"2.0.2","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"2.0.3","libVer":"1.0.0","author":"Confident-hate"}
 
 local json = Require("dkjson")
 
@@ -282,11 +282,16 @@ local function parseNovel(novelURL)
         if info.novel_desc then
             local doc = Document(info.novel_desc)
             local pTags = doc:select("p")
-            for i = 0, pTags:size() - 1 do
-                local pText = pTags:get(i):text()
-                if pText and pText ~= "" then
-                    finalDesc = finalDesc .. pText .. "\n\n"
+            if pTags:size() > 0 then
+                for i = 0, pTags:size() - 1 do
+                    local pText = pTags:get(i):text()
+                    if pText and pText ~= "" then
+                        finalDesc = finalDesc .. pText .. "\n\n"
+                    end
                 end
+            else
+                -- Plain text with no HTML tags — use as-is
+                finalDesc = info.novel_desc
             end
         end
 
