@@ -176,20 +176,20 @@
 			"fileName": "Novelbin",
 			"imageURL": "https://i.imgur.com/KQOwfMt.png",
 			"lang": "en",
-			"ver": "2.0.1",
+			"ver": "2.0.2",
 			"libVer": "1.0.0",
-			"md5": "327fa53005bc092ddfbab032370f1ebb1c0f26b6f55ce887ca2c70c1700c2ae7",
+			"md5": "715cf11f24de1075f57d5ae85252a90a41b1c7ce8c4e403b53b50e1b6179b60e",
 			"type": "LuaScript"
 		},
 		{
 			"id": 10255,
 			"name": "WTR-LAB",
-			"fileName": "wtr-lab",
+			"fileName": "WTR-LAB",
 			"imageURL": "https://i.imgur.com/ObQtFVW.png",
 			"lang": "en",
-			"ver": "1.1.6",
+			"ver": "1.1.7",
 			"libVer": "1.0.0",
-			"md5": "c12b5bcdb681d6ec6928af6f1248487f550af10aeab966e9d628fb682762a193",
+			"md5": "2f7e7c1f18e54e920d7399a538cef02937281a82eaa20663f02358df7c858a92",
 			"type": "LuaScript"
 		},
 		{
