@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"2.0.1","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"2.0.2","libVer":"1.0.0","author":"Confident-hate"}
 
 local json = Require("dkjson")
 
@@ -200,6 +200,7 @@ local function getPassage(chapterURL)
             local p = pTags:get(i)
             local t = p:text()
             if t and t ~= "" then
+                t = t:gsub("<", "&lt;"):gsub(">", "&gt;")
                 finalHtmlContent = finalHtmlContent .. "<br><br>" .. t
             end
         end
@@ -247,17 +248,17 @@ local function parseNovel(novelURL)
     local novelPath = normalizeNovelURL(novelURL)
     local novelSlug = getNovelSlug(novelURL)
     
-    -- 1. Get the Cover Image and Genres from HTML
+    -- 1. Get the Cover Image from HTML
     local url = baseURL .. "/" .. novelPath
     local document = GETDocument(url)
     local imageElement = document:selectFirst("main img")
     local finalImageURL = imageElement and imageElement:attr("src") or ""
-    local genreLinks = document:select("a[href^='/genre/']")
+    local finalGenres = {}
 
     -- 2. Get Metadata from the JSON API
     local metadataEndpoint = baseURL .. "/api-web/novels/" .. novelSlug
     local metaResponse = safeJsonGet(metadataEndpoint)
-    
+
     local finalTitle = ""
     local finalAuthor = "Author: Unknown"
     local finalStatus = NovelStatus.UNKNOWN
@@ -265,12 +266,11 @@ local function parseNovel(novelURL)
 
     if metaResponse and metaResponse.item and metaResponse.item.novelInfo then
         local info = metaResponse.item.novelInfo
-        
+
         -- Title & Author
         finalTitle = info.novel_name or ""
         local rawAuthor = info.novel_author or "Unknown"
         finalAuthor = "Author: " .. rawAuthor
-        
         -- Status (0 = Ongoing, others usually complete)
         if info.novel_status == 0 then
             finalStatus = NovelStatus.PUBLISHING
@@ -288,6 +288,13 @@ local function parseNovel(novelURL)
                     finalDesc = finalDesc .. pText .. "\n\n"
                 end
             end
+        end
+
+        -- Genres from API
+        local rawGenres = info.novel_genres or {}
+        for _, g in ipairs(rawGenres) do
+            local titled = g:sub(1,1):upper() .. g:sub(2):lower()
+            finalGenres[#finalGenres + 1] = titled
         end
     end
 
@@ -340,7 +347,7 @@ local function parseNovel(novelURL)
         imageURL = finalImageURL,
         status = finalStatus,
         authors = { finalAuthor },
-        genres = map(genreLinks, text),
+        genres = finalGenres,
         chapters = AsList(chapters)
     }
 end

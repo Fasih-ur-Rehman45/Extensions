@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.1.6","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.1.7","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -160,6 +160,7 @@ local function getPassage(chapterURL)
         if jdata.data.data.glossary_data and jdata.data.data.glossary_data.terms then
             for i, term in ipairs(jdata.data.data.glossary_data.terms) do
                 placeholderMap["※" .. (i - 1) .. "⛬"] = term[1]
+                placeholderMap["※" .. (i - 1) .. "〓"] = term[1]
             end
         end
         -- Term replacement for patch data
@@ -217,26 +218,17 @@ local function parseNovel(novelURL)
     end
     local script = doc:selectFirst("#__NEXT_DATA__"):html()
     local data = json.decode(script)
-    local serie = data.props.pageProps.serie
+    local serie = data.props.pageProps.serie or {}
     -- Handle both serie.serie_data.data.title and serie.serie_data.title
-    local serieData = serie.serie_data.data or serie.serie_data
-    local authorElements = doc:select(".serie-info-grid .sig-row:has(.sig-label:matchesOwn(^Author$)) .sig-value a.sig-author-alt")
-    local authors = authorElements and map(authorElements, text) or {}
-    if authors == nil or #authors == 0 then
-        authors = {"Unknown"}
-    end
-    local statusText = ""
-    local statusElement = doc:selectFirst(".serie-info-grid .sig-row:has(.sig-label:matchesOwn(^Status$)) .sig-value")
-    if statusElement ~= nil then
-        statusText = statusElement:text()
-    end
-    local status = ({
-        Ongoing = NovelStatus.PUBLISHING,
-        Completed = NovelStatus.COMPLETED,
-    })[statusText] or NovelStatus.UNKNOWN
+    local serieData = serie.serie_data and (serie.serie_data.data or serie.serie_data) or {}
+    local authors = { "Author: " .. (serieData.author or "Unknown") }
+    local statusCode = serie.serie_data and serie.serie_data.status
+    local status = statusCode == 0 and NovelStatus.PUBLISHING
+                or statusCode == 1 and NovelStatus.COMPLETED
+                or NovelStatus.UNKNOWN
     local novelInfo = NovelInfo {
         title = serieData.title,
-        imageURL = serie.serie_data.data.image,
+        imageURL = serieData.image or "",
         description = doc:selectFirst(".description"):text(),
         authors = authors,
         status = status,
@@ -304,11 +296,14 @@ local listings = {
             local url = baseURL .. "en/novel-finder?orderBy=" .. orderValue .. "&order=" .. sortValue .. "&status=" .. statusValue .. "&page=" .. page
             local doc = GETDocument(url)
         
-        return map(doc:select(".serie-item"), function(el)
+        local script = doc:selectFirst("#__NEXT_DATA__"):html()
+        local jsonData = json.decode(script)
+        local seriesData = jsonData.props.pageProps.series or {}
+        return map(seriesData, function(v)
             return Novel {
-                title = el:select(".title-wrap a"):text():gsub(el:select(".rawtitle"):text(), ""),
-                link = shrinkURL(el:select("a"):attr("href"), KEY_NOVEL_URL),
-                imageURL = baseURL .. el:select("div.image-wrap.zoom img"):attr("src")
+                title = (v.data and v.data.title) or "",
+                link = "serie-" .. tostring(v.raw_id) .. "/" .. tostring(v.slug),
+                imageURL = (v.data and v.data.image) or ""
             }
         end)
     end),
@@ -316,11 +311,14 @@ local listings = {
         local page = data[PAGE]
         local url = baseURL .. "en/trending?page=" .. page
         local doc = GETDocument(url)
-        return map(doc:select(".serie-item"), function(el)
+        local script = doc:selectFirst("#__NEXT_DATA__"):html()
+        local jsonData = json.decode(script)
+        local seriesData = jsonData.props.pageProps.list or {}
+        return map(seriesData, function(v)
             return Novel {
-                title = el:select(".title-wrap a"):text():gsub(el:select(".rawtitle"):text(), ""),
-                link = shrinkURL(el:select("a"):attr("href"), KEY_NOVEL_URL),
-                imageURL = baseURL .. el:select("img"):attr("src"),
+                title = (v.data and v.data.title) or "",
+                link = "serie-" .. tostring(v.raw_id) .. "/" .. tostring(v.slug),
+                imageURL = (v.data and v.data.image) or ""
             }
         end)
     end)
