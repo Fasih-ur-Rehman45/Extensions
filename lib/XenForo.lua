@@ -1,4 +1,4 @@
--- {"ver":"1.0.13","author":"JFronny","dep":["unhtml>=1.0.0","url>=1.0.0"]}
+-- {"ver":"1.0.15","author":"JFronny","dep":["unhtml>=1.0.0","url>=1.0.0"]}
 
 local HTMLToString = Require("unhtml").HTMLToString
 local qs = Require("url").querystring
@@ -34,7 +34,10 @@ local defaults = {
 }
 
 function defaults:shrinkURL(url)
-    return url:gsub("https?://.-/threads/", ""):gsub("/$", "")
+    local result = url:gsub("^https?://[^/?#]*", "")
+                      :gsub("^/threads/", "")
+                      :gsub("/$", "")
+    return result
 end
 
 function defaults:expandURL(url)
@@ -99,8 +102,8 @@ function defaults:parseNovel(novelURL, loadChapters)
     local s = first(threadmarks:select(".threadmarkListingHeader-stats dl.pairs"), function(v)
         local headerTitle = v:selectFirst("dt"):text()
         return headerTitle == "Status" or headerTitle == "Index progress"
-    end):selectFirst("dd"):text()
-
+    end)
+    s = s and s:selectFirst("dd"):text() or nil
     s = s and ({
         Ongoing = NovelStatus.PUBLISHING,
         Incomplete = NovelStatus.PUBLISHING,
@@ -137,13 +140,24 @@ function defaults:parseNovel(novelURL, loadChapters)
     }
 
     if loadChapters then
-        local threadmarkContainer = first(threadmarks:select(".threadmarkListingHeader-stats dl.pairs"), function(v)
+        local count = first(threadmarks:select(".threadmarkListingHeader-stats dl.pairs"), function(v)
             return v:selectFirst("dt"):text() == "Threadmarks"
         end)
-        local count = threadmarkContainer:selectFirst("dd"):text():gsub(",", "")
-        count = tonumber(count)
-        count = count - count % 200
-        count = count / 200 + 1
+        count = count and count:selectFirst("dd"):text():gsub(",", "") or nil
+        if count then
+          -- infer from total threadmark count and page size
+          count = tonumber(count)
+          count = count - count % 200
+          count = count / 200 + 1
+        else
+          -- some sites don't show the threadmark count, attempt to find reference to last page and infer from that
+          count = threadmarks:select(".pageNav-main .pageNav-page")
+          if count:size() == 0 then
+              count = 1
+          else
+              count = tonumber(count:get(count:size() - 1):text()) or 1000
+          end
+        end
         local function parseChapters(novelDoc, page)
             local i = 0
             return mapNotNil(novelDoc:select(".structItemContainer .structItem"), function(v)
@@ -153,7 +167,7 @@ function defaults:parseNovel(novelURL, loadChapters)
                 return NovelChapter {
                     order = (page - 1) * 200 + i,
                     title = linkElement:text(),
-                    link = self.shrinkURL(linkElement:attr("href")):sub(10),
+                    link = self.shrinkURL(linkElement:attr("href")),
                     release = (timeElement and (timeElement:attr("title") or timeElement:attr("unixtime")))
                 }
             end)
@@ -161,7 +175,9 @@ function defaults:parseNovel(novelURL, loadChapters)
         local chaps = parseChapters(threadmarks, 1)
         for i = 2, count do
             local next = GETDocument(self.expandURL(novelURL, KEY_NOVEL_URL) .. "/threadmarks?per_page=200&page=" .. i)
-            chaps = concatLists(chaps, parseChapters(next, i))
+            next = parseChapters(next, i)
+            if #next == 0 then break end
+            chaps = concatLists(chaps, next)
         end
         novel:setChapters(AsList(chaps))
     end
@@ -170,11 +186,11 @@ function defaults:parseNovel(novelURL, loadChapters)
 end
 
 local function handleNovelURL(url)
-    url = url:gsub("?.*$", "")
+    url = url:gsub("^/threads/", "")
+            :gsub("?.*$", "")
             :gsub("/$", "")
             :gsub("/threadmarks$", "")
             :gsub("/unread$", "")
-            :sub(10)
     return url
 end
 
@@ -225,8 +241,8 @@ function defaults:search(data)
     end
 
     -- Example search URLs (from SpaceBattles):
-    -- Creative Writing: https://forums.spacebattles.com/search/1/?t=post&c[child_nodes]=1&c[nodes][0]=18&c[threadmark_categories][0]=1&c[threadmark_only]=1&c[title_only]=1&o=relevance&g=1&q=Josh
-    -- Quests:           https://forums.spacebattles.com/search/1/?t=post&c[child_nodes]=1&c[nodes][0]=240&c[threadmark_categories][0]=1&c[threadmark_only]=1&c[title_only]=1&o=relevance&g=1&q=Josh
+    -- Creative Writing: https://forums.spacebattles.com/search/1/?t=post&c[child_nodes]=1&c[nodes][0]=18&c[threadmark_categories][0]=1&c[title_only]=1&o=relevance&g=1&q=Josh
+    -- Quests:           https://forums.spacebattles.com/search/1/?t=post&c[child_nodes]=1&c[nodes][0]=240&c[threadmark_categories][0]=1&c[title_only]=1&o=relevance&g=1&q=Josh
     local page = GETDocument(self.baseURL .. "search/" .. searchID .. "/?" .. qs({
         page = data[PAGE],
         q = data[QUERY],
@@ -234,7 +250,6 @@ function defaults:search(data)
         ["c[child_nodes]"] = 1,
         ["c[nodes][0]"] = forum,
         ["c[threadmark_categories][0]"] = 1,
-        ["c[threadmark_only]"] = 1,
         ["c[title_only]"] = 1,
         o = order,
         g = 1

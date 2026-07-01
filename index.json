@@ -117,9 +117,9 @@
 		},
 		{
 			"name": "XenForo",
-			"ver": "1.0.13",
+			"ver": "1.0.15",
 			"url": null,
-			"hash": "6dcf1eea9c765fdec65b6cdc505365df2e6f7ea65461dc443f7f7791291234e9"
+			"hash": "f7215508d6f790bc998272d61a133c2c994ee16987c70c9c83e08b98dc9ba92b"
 		},
 		{
 			"name": "bigint",
@@ -135,9 +135,9 @@
 		},
 		{
 			"name": "novelvault",
-			"ver": "1.0.2",
+			"ver": "1.0.5",
 			"url": null,
-			"hash": "260f4bf533359c7266d62a2092533dbee982ddda144546941892e8d8301d9d2d"
+			"hash": "959ae853580501bd39938ca96a06ba229d0916ea63b87f5d656491855772d662"
 		},
 		{
 			"name": "unhtml",

@@ -6,10 +6,12 @@ on:
     branches: [ main ]
     paths:
       - 'src/**/*.lua'
+      - 'lib/**/*.lua'
       - 'index.json'
   pull_request:
     paths:
       - 'src/**/*.lua'
+      - 'lib/**/*.lua'
       - 'index.json'
 
 jobs:
@@ -54,13 +56,16 @@ jobs:
       with:
         name: bin-artifact
         path: bin
-    - name: Install git
-      run: apt-get update -qq && apt-get install -y -qq git
     - name: Validate index
       run: |
+        cp index.json index.json.bak
         java -jar bin/extension-tester.jar --ci --generate-index
-        DELTA=$(git diff --minimal -- index.json)
-        if [ ! -z "$DELTA" ]; then echo "Index file is not up to date: $DELTA"; exit 1; fi
+        if ! diff -q index.json index.json.bak > /dev/null 2>&1; then
+          echo "Index file is not up to date:"
+          diff index.json index.json.bak
+          exit 1
+        fi
+        echo "Index is up to date"
 
   validate_metadata:
     needs: download
@@ -115,9 +120,9 @@ jobs:
         since_last_remote_commit: 'true'
     - name: Test
       run: |
-        if [ -n "index.json src/en/wtr-lab.lua" ]; then
+        if [ -n "${{ steps.changed-files.outputs.all_changed_files }}" ]; then
           echo "Changed files found"
-          for file in index.json src/en/wtr-lab.lua; do
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             case "$file" in
               *.lua)
                 echo "Testing Lua file: $file"
@@ -134,7 +139,7 @@ jobs:
 
   trigger_changelog:
     needs: [test, validate_index, validate_metadata]
-    if: github.event_name == 'push'
+    if: success() && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
     - name: Trigger Changelog Workflow

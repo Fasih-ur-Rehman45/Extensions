@@ -1,4 +1,4 @@
--- {"ver":"1.0.2","author":"Bigrand","dep":["url>=1.0.0", "unhtml>=1.0.0"]}
+-- {"ver":"1.0.5","author":"Bigrand","dep":["url>=1.0.0", "unhtml>=1.0.0"]}
 
 local qs = Require("url").querystring
 local unhtml = Require("unhtml")
@@ -296,6 +296,12 @@ local defaults = {
             links = doc:select("select option")
             if not links:isEmpty() then
                 return links, "select"
+            end
+
+            -- NovelBin AJAX chapter archive
+            links = doc:select("li[data-chapter-item] a")
+            if not links:isEmpty() then
+                return links, "list"
             end
 
             links = doc:select(".list-chapter li a")
@@ -638,7 +644,7 @@ local function parseSelectChapter(element)
 end
 
 local function parseListChapter(element)
-    local titleElement = element:selectFirst(".nchr-text")
+    local titleElement = element:selectFirst(".nchr-text") or element
 
     local isPremium = titleElement:selectFirst(".premium-label")
     local isPaid = titleElement:selectFirst(".paid-label")
@@ -647,7 +653,10 @@ local function parseListChapter(element)
         return nil
     end
 
-    local chapTitle = element:text()
+    local chapTitle = element:attr("title")
+    if not chapTitle or chapTitle == "" then
+        chapTitle = element:text()
+    end
     local chapLink = element:attr("href")
 
     return { title = chapTitle, link = chapLink }
@@ -705,6 +714,19 @@ function defaults:parseNovel(novelURL, loadChapters)
     }
 
     if loadChapters then
+        if self.chapterFetcher then
+            NovelInfo:setChapters(self.chapterFetcher(self, url, document))
+        else
+        local lastFreeChapterNum = nil
+        local latestChapterEl = document:selectFirst(".l-chapter .chapter-title")
+        if latestChapterEl then
+            local latestText = latestChapterEl:text()
+            local num = latestText:match("[Cc]hapter%s+(%d+)")
+            if num then
+                lastFreeChapterNum = tonumber(num)
+            end
+        end
+
         local chapterIndexURL
         chapterIndexURL = qs({[self.novelIdParam] = novelID}, self.baseURL .. "/" .. self.ajaxChaptersURL)
 
@@ -732,6 +754,14 @@ function defaults:parseNovel(novelURL, loadChapters)
                 return nil
             end
 
+            -- Skip chapters beyond the last free chapter
+            if lastFreeChapterNum then
+                local chNum = parsed.title:match("[Cc]hapter%s+(%d+)")
+                if chNum and tonumber(chNum) > lastFreeChapterNum then
+                    return nil
+                end
+            end
+
             local link = parsed.link
             link = link:match("^/(.*)") or self.shrinkURL(link)
             link = link
@@ -745,6 +775,7 @@ function defaults:parseNovel(novelURL, loadChapters)
         end))
 
         NovelInfo:setChapters(chapters)
+        end -- chapterFetcher else
     end
 
     return NovelInfo
@@ -798,7 +829,7 @@ function defaults:getListing(name, inc, sortString)
             url = self.baseURL .. "/" .. sortString
         end
 
-        if page > 1 and inc then
+        if page and page > 1 and inc then
             local sep = url:find("?", 1, true) and "&" or "?"
             if self.pageParam and self.pageParam ~= "" then
                 url = url .. sep .. self.pageParam .. "=" .. page
