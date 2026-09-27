@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"2.0.5","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"2.0.6","libVer":"1.0.0","author":"Confident-hate"}
 
 local json = Require("dkjson")
 
@@ -56,6 +56,8 @@ local function safeJsonGet(url)
 end
 
 local GENRE_FILTER = 2
+local STATUS_FILTER = 3
+local SORT_FILTER = 4
 local GENRE_PARAMS = {
     "",
     "/novelping-genres/action",
@@ -171,8 +173,25 @@ local GENRE_VALUES = {
     "Yuri"
 }
 
+local STATUS_VALUES = {
+    "All",
+    "Ongoing",
+    "Completed"
+}
+
+local SORT_VALUES = {
+    "Popular this week",
+    "Last updated",
+    "Recently added",
+    "Top (most viewed)",
+    "Top rated",
+    "Most chapters"
+}
+
 local searchFilters = {
     DropdownFilter(GENRE_FILTER, "Genre", GENRE_VALUES),
+    DropdownFilter(STATUS_FILTER, "Status", STATUS_VALUES),
+    DropdownFilter(SORT_FILTER, "Sort by", SORT_VALUES),
 }
 
 --- @param chapterURL string @url of the chapter
@@ -242,13 +261,79 @@ local function parseListing(listingURL)
     return novels
 end
 
+--- Resolves the sort query parameter based on whether a genre is active
+local function getSortParam(sortIndex, isGenre)
+    if isGenre then
+        if sortIndex == 0 then return "" end -- Popular this week (default on genre)
+        if sortIndex == 1 then return "LASTEST" end -- Last updated
+        if sortIndex == 2 then return "NEW" end
+        if sortIndex == 3 then return "ALL_TIME" end
+        if sortIndex == 4 then return "RATING" end
+        if sortIndex == 5 then return "CHAPTERS" end
+    else
+        if sortIndex == 0 then return "POPULAR" end -- Popular this week (default)
+        if sortIndex == 1 then return "" end -- Last updated (default on /sort/updates)
+        if sortIndex == 2 then return "NEW" end
+        if sortIndex == 3 then return "ALL_TIME" end
+        if sortIndex == 4 then return "RATING" end
+        if sortIndex == 5 then return "CHAPTERS" end
+    end
+    return ""
+end
+
+--- Builds the URL combining Genre, Status, Sort, and Page
+local function buildListingURL(data, defaultBase)
+    local page = data[PAGE] or 1
+    local genre = data[GENRE_FILTER]
+    local status = data[STATUS_FILTER]
+    local sort = data[SORT_FILTER]
+
+    local basePath = defaultBase or "/sort/updates"
+    local isGenre = false
+
+    -- If a specific genre is selected (index > 0)
+    if genre ~= nil and genre > 0 and GENRE_PARAMS[genre + 1] and GENRE_PARAMS[genre + 1] ~= "" then
+        basePath = GENRE_PARAMS[genre + 1]
+        isGenre = true
+    end
+
+    -- Append status subpath
+    local statusPath = ""
+    if status == 1 then
+        statusPath = "/ongoing"
+    elseif status == 2 then
+        statusPath = "/completed"
+    end
+
+    -- Resolve sort query
+    local sortParam = getSortParam(sort or 0, isGenre)
+
+    -- Assemble query string (?sort=...&page=...)
+    local queryParts = {}
+    if sortParam ~= "" then
+        table.insert(queryParts, "sort=" .. sortParam)
+    end
+    if page then
+        table.insert(queryParts, "page=" .. page)
+    end
+
+    local queryString = ""
+    if #queryParts > 0 then
+        queryString = "?" .. table.concat(queryParts, "&")
+    end
+
+    return baseURL .. basePath .. statusPath .. queryString
+end
+
 --- @param data table
 local function search(data)
     local queryContent = data[QUERY]
     local page = data[PAGE]
-    -- Updated to use the correct /search endpoint path
-    local searchURL = baseURL .. "/search?keyword=" .. queryContent .. "&page=" .. page
-    return parseListing(searchURL)
+    if queryContent and queryContent ~= "" then
+        local searchURL = baseURL .. "/search?keyword=" .. queryContent .. "&page=" .. page
+        return parseListing(searchURL)
+    end
+    return parseListing(buildListingURL(data, "/sort/updates"))
 end
 
 --- @param novelURL string @URL of novel
@@ -366,22 +451,6 @@ local function parseNovel(novelURL)
     }
 end
 
-local function getListing(name, inc, sortString)
-    return Listing(name, inc, function(data)
-        local genre = data[GENRE_FILTER]
-        local page = data[PAGE]
-        local genreValue = ""
-        if genre ~= nil then
-            genreValue = GENRE_PARAMS[genre + 1]
-        end
-        local url = baseURL .. genreValue .. "?page=" .. page
-        if genreValue == "" then
-            url = baseURL .. sortString .. "?page=" .. page
-        end
-        return parseListing(url)
-    end)
-end
-
 return {
     id = 10121,
     name = "Novelbin",
@@ -389,10 +458,9 @@ return {
     imageURL = "https://i.imgur.com/KQOwfMt.png",
     hasSearch = true,
     listings = {
-        getListing("Hot Novels", true, "/sort/hot"),
-        getListing("Completed Novels", true, "/sort/complete"),
-        getListing("Popular Novels", true, "/sort/popular"),
-        getListing("Latest Novels", true, "/sort/updates")
+        Listing("All Novels", true, function(data)
+            return parseListing(buildListingURL(data, "/sort/updates"))
+        end)
     },
     parseNovel = parseNovel,
     getPassage = getPassage,
