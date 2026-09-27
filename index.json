@@ -8,6 +8,13 @@
 			"website": ""
 		},
 		{
+			"id": 0,
+			"name": "",
+			"desc": "Worked on Fenrir Realm, MVLEMPYR",
+			"imageURL": "",
+			"website": ""
+		},
+		{
 			"id": 1550377221,
 			"name": "Bigrand",
 			"desc": "Worked on novelvault, unhtml",
@@ -18,13 +25,6 @@
 			"id": -2017179821,
 			"name": "Doomsdayrs",
 			"desc": "Worked on NovelFull, Syosetsu",
-			"imageURL": "",
-			"website": ""
-		},
-		{
-			"id": 0,
-			"name": "",
-			"desc": "Worked on MVLEMPYR",
 			"imageURL": "",
 			"website": ""
 		},
@@ -176,9 +176,9 @@
 			"fileName": "Novelbin",
 			"imageURL": "https://i.imgur.com/KQOwfMt.png",
 			"lang": "en",
-			"ver": "2.0.3",
+			"ver": "2.0.4",
 			"libVer": "1.0.0",
-			"md5": "050a7ade23756319ce0516c7e4d867c421ad6d73712b4e2f1b53ef7e0365486d",
+			"md5": "088e21647c35c2480b1b17e3cfd066529b93052842bdf666daa0fbf5578cf626",
 			"type": "LuaScript"
 		},
 		{
@@ -190,6 +190,17 @@
 			"ver": "1.1.7",
 			"libVer": "1.0.0",
 			"md5": "5a8cfcf1a62fb80ed4d5c52d51b2a952be8fbef0115e483672af6cea2bd33f32",
+			"type": "LuaScript"
+		},
+		{
+			"id": 15533,
+			"name": "Fenrir Realm",
+			"fileName": "FenrirTranslation",
+			"imageURL": "https://fenrirealm.com/img/logo/fenrir-logo.png",
+			"lang": "en",
+			"ver": "1.0.9",
+			"libVer": "1.0.6",
+			"md5": "19912b27958a397c8d3a7d0e10f411878360b991d0ea06477fe5a7813e2494e5",
 			"type": "LuaScript"
 		},
 		{

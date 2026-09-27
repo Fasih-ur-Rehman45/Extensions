@@ -1,8 +1,9 @@
--- {"id":10121,"ver":"2.0.3","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"2.0.4","libVer":"1.0.0","author":"Confident-hate"}
 
 local json = Require("dkjson")
 
-local baseURL = "https://novelarrow.com"
+local baseURL = "https://novelping.com"
+local novelarrowURL = "https://novelarrow.com"
 
 ---@param v Element
 local text = function(v)
@@ -24,6 +25,7 @@ end
 local function normalizeNovelURL(novelURL)
     novelURL = tostring(novelURL):gsub("^/+", "")
     novelURL = novelURL:gsub("^b/", "novel/")
+    novelURL = novelURL:gsub("^book/", "novel/")
     if not novelURL:match("^novel/") then
         novelURL = "novel/" .. novelURL
     end
@@ -56,60 +58,60 @@ end
 local GENRE_FILTER = 2
 local GENRE_PARAMS = {
     "",
-    "/genre/action",
-    "/genre/adult",
-    "/genre/adventure",
-    "/genre/anime",
-    "/genre/arts",
-    "/genre/comedy",
-    "/genre/drama",
-    "/genre/eastern",
-    "/genre/ecchi",
-    "/genre/fan-fiction",
-    "/genre/fantasy",
-    "/genre/game",
-    "/genre/gender-bender",
-    "/genre/harem",
-    "/genre/historical",
-    "/genre/horror",
-    "/genre/isekai",
-    "/genre/josei",
-    "/genre/lgbt+",
-    "/genre/magic",
-    "/genre/magical-realism",
-    "/genre/manhua",
-    "/genre/martial-arts",
-    "/genre/mature",
-    "/genre/mecha",
-    "/genre/military",
-    "/genre/modern-life",
-    "/genre/movies",
-    "/genre/mystery",
-    "/genre/psychological",
-    "/genre/realistic-fiction",
-    "/genre/reincarnation",
-    "/genre/romance",
-    "/genre/school-life",
-    "/genre/sci-fi",
-    "/genre/seinen",
-    "/genre/shoujo",
-    "/genre/shoujo-ai",
-    "/genre/shounen",
-    "/genre/shounen-ai",
-    "/genre/slice-of-life",
-    "/genre/smut",
-    "/genre/sports",
-    "/genre/supernatural",
-    "/genre/system",
-    "/genre/tragedy",
-    "/genre/urban-life",
-    "/genre/video-games",
-    "/genre/war",
-    "/genre/wuxia",
-    "/genre/xianxia",
-    "/genre/xuanhuan",
-    "/genre/yaoi",
-    "/genre/yuri"
+    "/novelping-genres/action",
+    "/novelping-genres/adult",
+    "/novelping-genres/adventure",
+    "/novelping-genres/anime",
+    "/novelping-genres/arts",
+    "/novelping-genres/comedy",
+    "/novelping-genres/drama",
+    "/novelping-genres/eastern",
+    "/novelping-genres/ecchi",
+    "/novelping-genres/fan-fiction",
+    "/novelping-genres/fantasy",
+    "/novelping-genres/game",
+    "/novelping-genres/gender-bender",
+    "/novelping-genres/harem",
+    "/novelping-genres/historical",
+    "/novelping-genres/horror",
+    "/novelping-genres/isekai",
+    "/novelping-genres/josei",
+    "/novelping-genres/lgbt+",
+    "/novelping-genres/magic",
+    "/novelping-genres/magical-realism",
+    "/novelping-genres/manhua",
+    "/novelping-genres/martial-arts",
+    "/novelping-genres/mature",
+    "/novelping-genres/mecha",
+    "/novelping-genres/military",
+    "/novelping-genres/modern-life",
+    "/novelping-genres/movies",
+    "/novelping-genres/mystery",
+    "/novelping-genres/psychological",
+    "/novelping-genres/realistic-fiction",
+    "/novelping-genres/reincarnation",
+    "/novelping-genres/romance",
+    "/novelping-genres/school-life",
+    "/novelping-genres/sci-fi",
+    "/novelping-genres/seinen",
+    "/novelping-genres/shoujo",
+    "/novelping-genres/shoujo-ai",
+    "/novelping-genres/shounen",
+    "/novelping-genres/shounen-ai",
+    "/novelping-genres/slice-of-life",
+    "/novelping-genres/smut",
+    "/novelping-genres/sports",
+    "/novelping-genres/supernatural",
+    "/novelping-genres/system",
+    "/novelping-genres/tragedy",
+    "/novelping-genres/urban-life",
+    "/novelping-genres/video-games",
+    "/novelping-genres/war",
+    "/novelping-genres/wuxia",
+    "/novelping-genres/xianxia",
+    "/novelping-genres/xuanhuan",
+    "/novelping-genres/yaoi",
+    "/novelping-genres/yuri"
 }
 local GENRE_VALUES = {
     "None",
@@ -181,7 +183,7 @@ local function getPassage(chapterURL)
     
     if not novelSlug or not chapterSlug then return "" end
     
-    local apiEndpoint = baseURL .. "/api-web/novels/" .. novelSlug .. "/chapters/" .. chapterSlug
+    local apiEndpoint = novelarrowURL .. "/api-web/novels/" .. novelSlug .. "/chapters/" .. chapterSlug
     local response = safeJsonGet(apiEndpoint)
     
     local finalHtmlContent = ""
@@ -213,18 +215,25 @@ local function parseListing(listingURL)
     local document = GETDocument(listingURL)
     local novels = {}
     local seen = {}
-    local anchors = document:select("a[href^='/novel/']")
+
+    -- New site structure: title in h3.novel-title > a, image in img.cover
+    local anchors = document:select("h3.novel-title a")
+    local covers = document:select("img.cover")
+
     for i = 0, anchors:size() - 1 do
         local anchor = anchors:get(i)
-        local href = anchor:attr("href") and tostring(anchor:attr("href")) or ""
+        local href = tostring(anchor:attr("href") or "")
         if href ~= "" and not seen[href] then
+            seen[href] = true
             local title = anchor:attr("title") and tostring(anchor:attr("title")) or anchor:text()
-            local imageElement = anchor:selectFirst("img")
-            if title ~= "" or imageElement then
-                seen[href] = true
+            local imageURL = ""
+            if covers and i < covers:size() then
+                imageURL = tostring(covers:get(i):attr("src") or "")
+            end
+            if title ~= "" then
                 novels[#novels + 1] = Novel {
                     title = title,
-                    imageURL = imageElement and imageElement:attr("src") or "",
+                    imageURL = imageURL,
                     link = shrinkURL(href)
                 }
             end
@@ -249,14 +258,14 @@ local function parseNovel(novelURL)
     local novelSlug = getNovelSlug(novelURL)
     
     -- 1. Get the Cover Image from HTML
-    local url = baseURL .. "/" .. novelPath
+    local url = novelarrowURL .. "/" .. novelPath
     local document = GETDocument(url)
     local imageElement = document:selectFirst("main img")
     local finalImageURL = imageElement and imageElement:attr("src") or ""
     local finalGenres = {}
 
     -- 2. Get Metadata from the JSON API
-    local metadataEndpoint = baseURL .. "/api-web/novels/" .. novelSlug
+    local metadataEndpoint = novelarrowURL .. "/api-web/novels/" .. novelSlug
     local metaResponse = safeJsonGet(metadataEndpoint)
 
     local finalTitle = ""
@@ -310,7 +319,7 @@ local function parseNovel(novelURL)
     end
 
     -- 3. Get Chapters List from JSON API
-    local chaptersEndpoint = baseURL .. "/api-web/novels/" .. novelSlug .. "/chapters"
+    local chaptersEndpoint = novelarrowURL .. "/api-web/novels/" .. novelSlug .. "/chapters"
     local chaptersResponse = safeJsonGet(chaptersEndpoint)
     local chapterItems = chaptersResponse and (chaptersResponse.items or chaptersResponse) or {}
     
@@ -380,10 +389,10 @@ return {
     imageURL = "https://i.imgur.com/KQOwfMt.png",
     hasSearch = true,
     listings = {
-        getListing("Hot Novels", true, "/novels/hot"),
-        getListing("Completed Novels", true, "/novels/complete"),
-        getListing("Ongoing Novels", true, "/novels/ongoing"),
-        getListing("Latest Novels", true, "/novels/latest")
+        getListing("Hot Novels", true, "/sort/hot"),
+        getListing("Completed Novels", true, "/sort/complete"),
+        getListing("Popular Novels", true, "/sort/popular"),
+        getListing("Latest Novels", true, "/sort/updates")
     },
     parseNovel = parseNovel,
     getPassage = getPassage,
