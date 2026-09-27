@@ -1,4 +1,4 @@
--- {"id":10121,"ver":"2.0.4","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":10121,"ver":"2.0.5","libVer":"1.0.0","author":"Confident-hate"}
 
 local json = Require("dkjson")
 
@@ -246,8 +246,8 @@ end
 local function search(data)
     local queryContent = data[QUERY]
     local page = data[PAGE]
-    -- Updated to use the correct /novels/search endpoint path
-    local searchURL = baseURL .. "/novels/search?keyword=" .. queryContent .. "&page=" .. page
+    -- Updated to use the correct /search endpoint path
+    local searchURL = baseURL .. "/search?keyword=" .. queryContent .. "&page=" .. page
     return parseListing(searchURL)
 end
 
