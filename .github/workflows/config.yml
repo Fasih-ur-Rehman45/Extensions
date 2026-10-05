@@ -4,15 +4,23 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    paths:
-      - 'src/**/*.lua'
-      - 'lib/**/*.lua'
-      - 'index.json'
+    paths-ignore:
+      - '.github/**'
+      - 'CHANGELOG.md'
   pull_request:
-    paths:
-      - 'src/**/*.lua'
-      - 'lib/**/*.lua'
-      - 'index.json'
+    paths-ignore:
+      - '.github/**'
+      - 'CHANGELOG.md'
+
+permissions:
+  contents: write
+  pull-requests: read
+  issues: read
+
+# Changelog commits are pushed back to main, so never run two of these at once.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   download:
@@ -24,10 +32,10 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '11'
-    
+
     - name: Make script executable
       run: chmod +x ./dev-setup.sh
-    
+
     - name: Setup environment
       run: |
         if [ -x "$(command -v bash)" ]; then
@@ -35,13 +43,7 @@ jobs:
         else
           sh ./dev-setup.sh --tester
         fi
-    
-    - name: Cache dependencies
-      uses: actions/cache@v3
-      with:
-        path: bin
-        key: ${{ runner.os }}-bin-${{ hashFiles('dev-setup.sh') }}
-    
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -68,12 +70,17 @@ jobs:
       run: |
         cp index.json index.json.bak
         java -jar bin/extension-tester.jar --ci --generate-index
-        if ! diff -q index.json index.json.bak > /dev/null 2>&1; then
-          echo "Index file is not up to date:"
-          diff index.json index.json.bak
+        # Compare parsed JSON, not raw bytes: different extension-tester builds
+        # indent differently (tabs vs spaces), which is not a real index change.
+        if diff -q <(jq -S . index.json.bak) <(jq -S . index.json) > /dev/null 2>&1; then
+          echo "Index is up to date"
+        else
+          echo "Index file is not up to date. Regenerate it with:"
+          echo "  java -jar bin/extension-tester.jar --ci --generate-index"
+          echo "Committed (<) vs generated (>):"
+          diff <(jq -S . index.json.bak) <(jq -S . index.json) || true
           exit 1
         fi
-        echo "Index is up to date"
 
   validate_metadata:
     needs: download
@@ -157,16 +164,64 @@ jobs:
           echo "No files changed, skipping tests"
         fi
 
-  trigger_changelog:
+  # Only runs once test, validate_index and validate_metadata have all passed.
+  changelog:
     needs: [test, validate_index, validate_metadata]
-    if: success() && github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-    - name: Trigger Changelog Workflow
-      run: |
-        curl -X POST \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-           https://api.github.com/repos/${{ github.repository }}/dispatches \
-           -d '{"event_type":"trigger_changelog"}'
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
+      - name: Ensure CHANGELOG.md exists
+        run: |
+          if [ ! -f CHANGELOG.md ]; then
+            echo "# Changelog" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            echo "_This changelog is automatically generated._" >> CHANGELOG.md
+          fi
+
+      - name: Generate Changelog
+        id: changelog
+        uses: ardalanamini/auto-changelog@v4.0.4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          commit-types: |
+            feat: ✨ Features
+            fix: 🐛 Bug Fixes
+            chore: 🔧 Maintenance
+            docs: 📝 Documentation
+            refactor: ♻️ Refactors
+            test: 🧪 Tests
+            ci: 🔄 CI/CD
+          default-commit-type: Other
+          release-name: v1.0.0
+          mention-authors: true
+          mention-new-contributors: true
+          include-commit-links: true
+          use-github-autolink: true
+
+      # Process changelog output to match desired format
+      - name: Process Changelog
+        run: |
+          # Get the raw changelog
+          CHANGELOG="${{ steps.changelog.outputs.changelog }}"
+          echo "$CHANGELOG" > temp_changelog.md
+          sed 's/^- /\* /g' temp_changelog.md > formatted_changelog.md
+          sed -E 's#([a-f0-9]{7})[a-f0-9]* \& #[\1](https://github.com/${{ github.repository }}/commit/\1) \& #g' formatted_changelog.md > intermediate_changelog.md
+          sed -E 's#([a-f0-9]{7})[a-f0-9]* by @([a-zA-Z0-9._-]+),?#\[\1](https://github.com/${{ github.repository }}/commit/\1) by ([@\2](https://github.com/\2))#g' intermediate_changelog.md > CHANGELOG.md
+          rm temp_changelog.md formatted_changelog.md intermediate_changelog.md
+
+      - name: Commit and Push Changelog (if changed)
+        run: |
+          AUTHOR_NAME=$(git log -1 --pretty=format:'%an')
+          AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae')
+          git config user.name "$AUTHOR_NAME"
+          git config user.email "$AUTHOR_EMAIL"
+          git add CHANGELOG.md
+          git diff --cached --quiet || {
+            git commit -m "docs(changelog): update changelog"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          }
