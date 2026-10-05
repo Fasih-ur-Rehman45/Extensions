@@ -7,10 +7,12 @@ on:
     paths-ignore:
       - '.github/**'
       - 'CHANGELOG.md'
+      - 'dev-setup.sh'
   pull_request:
     paths-ignore:
       - '.github/**'
       - 'CHANGELOG.md'
+      - 'dev-setup.sh'
 
 permissions:
   contents: write
