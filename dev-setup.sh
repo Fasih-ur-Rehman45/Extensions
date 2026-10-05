@@ -35,5 +35,5 @@ fi
 if [ "$DOWNLOAD_TESTER" = true ]; then
   ## Download extension tester
   mkdir -p bin
-  wget -O bin/extension-tester.jar "wget -O bin/extension-tester.jar "https://gitlab.com/shosetsuorg/extension-tester/-/jobs/artifacts/v2.1.1/raw/build/libs/extension-tester.jar?job=build""
+  wget -O bin/extension-tester.jar "https://gitlab.com/shosetsuorg/extension-tester/-/jobs/artifacts/v2.1.1/raw/build/libs/extension-tester.jar?job=build"
 fi
