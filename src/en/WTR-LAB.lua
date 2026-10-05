@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.1.7","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.1.8","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -117,6 +117,12 @@ local function getPassage(chapterURL)
     local response = Request(POST(apiUrl, headers, body))
     local apiResponseBody = response:body():string()
     local jdata = json.decode(apiResponseBody)
+    -- Newer API returns only metadata plus a signed content_url serving the actual chapter body
+    if jdata.content_url then
+        local contentHeaders = HeadersBuilder():add("Referer", url):build()
+        local contentResponse = Request(GET(expandURL(jdata.content_url), contentHeaders))
+        jdata = json.decode(contentResponse:body():string())
+    end
     local htmlContent
     -- If ai_enabled is true, content is already AI-translated (no decryption needed)
     if ai_enabled then
