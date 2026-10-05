@@ -1,4 +1,4 @@
--- {"id":10255,"ver":"1.1.8","libVer":"1.0.0","author":"Zordic"}
+-- {"id":10255,"ver":"1.1.9","libVer":"1.0.0","author":"Zordic"}
 
 local json = Require("dkjson")
 
@@ -240,18 +240,27 @@ local function parseNovel(novelURL)
         status = status,
     }
     if isReleased then
-        local endNum = serie.serie_data.chapter_count
-        local chaplist = baseURL .. 'api/chapters' .. "/" .. serie.serie_data.raw_id.."?start=1&end=" .. endNum
-        local chapdoc = GETDocument(chaplist)
-        local chapterData = json.decode(chapdoc:selectFirst("body"):text())
+        local endNum = serie.serie_data.chapter_count or 0
+        -- Series are AI-unlocked progressively: chapter_count counts every raw chapter,
+        -- while unlock_count is how many are actually readable (the "AI-Unlock Progress"
+        -- card on the site). The locked ones are always the tail, so cap the range.
+        local unlockCount = serie.serie_data.unlock_count
+        if unlockCount and unlockCount < endNum then
+            endNum = unlockCount
+        end
         local chapters = {}
-        for i, ch in ipairs(chapterData.chapters) do
-            chapters[#chapters+1] = NovelChapter {
-                title = ch.title,
-                -- To test you can use this link:"serie-" .. serie.serie_data.raw_id .. "/" .. serie.serie_data.slug .. "/chapter-" .. ch.order .."?service=google"
-                link = "serie-" .. serie.serie_data.raw_id .. "/" .. serie.serie_data.slug .. "/chapter-" .. ch.order,
-                order = i
-            }
+        if endNum > 0 then
+            local chaplist = baseURL .. 'api/chapters' .. "/" .. serie.serie_data.raw_id.."?start=1&end=" .. endNum
+            local chapdoc = GETDocument(chaplist)
+            local chapterData = json.decode(chapdoc:selectFirst("body"):text())
+            for i, ch in ipairs(chapterData.chapters) do
+                chapters[#chapters+1] = NovelChapter {
+                    title = ch.title,
+                    -- To test you can use this link:"serie-" .. serie.serie_data.raw_id .. "/" .. serie.serie_data.slug .. "/chapter-" .. ch.order .."?service=google"
+                    link = "serie-" .. serie.serie_data.raw_id .. "/" .. serie.serie_data.slug .. "/chapter-" .. ch.order,
+                    order = i
+                }
+            end
         end
         novelInfo:setChapters(chapters)
     else
